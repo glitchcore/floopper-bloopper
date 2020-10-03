@@ -71,6 +71,11 @@ void render_world(GameState* state, u8g2_t* fb) {
         (LABEL_X - state->screen_x) / SCALE, (LABEL_Y - state->screen_y) / SCALE,
         "Floopper bloopper!"
     );
+
+    u8g2_DrawBox(fb,
+        (5 * SCALE - state->screen_x) / SCALE, (10 * SCALE - state->screen_y) / SCALE,
+        10, 10
+    );
 }
 
 void render_ui(GameState* state, u8g2_t* fb) {
