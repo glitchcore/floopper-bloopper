@@ -19,3 +19,6 @@ typedef struct {
 #define PLAYER_HEIGHT 6
 #define SCALE 1000
 #define SPEED_X 50
+#define JUMP_SPEED -60
+
+#define FLOOR_HEIGHT 5

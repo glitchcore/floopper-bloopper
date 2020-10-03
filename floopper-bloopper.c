@@ -12,12 +12,6 @@ void render_graphics(GameState* state, u8g2_t* fb) {
 }
 
 void render_player(GameState* state, u8g2_t* fb) {
-    if (state->player_x < BONDARIES_X_LEFT * SCALE) {
-        state->player_x = BONDARIES_X_LEFT * SCALE;
-    } else if (state->player_x > (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE) {
-        state-> player_x = (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE;
-    }
-
     u8g2_DrawBox(fb, state->player_x / SCALE, state->player_y / SCALE, PLAYER_WIDTH, PLAYER_HEIGHT);
 }
 
@@ -54,6 +48,8 @@ void handle_key(GameState* state, InputEvent* input) {
     if(input->input == InputUp) {
         if(input->state) {
             state->player_jump = true;
+            state->player_vy = JUMP_SPEED;
+            state->player_jump = false;
         }
     }
 }
@@ -62,18 +58,31 @@ void handle_tick(GameState* state, uint32_t t, uint32_t dt) {
     // printf("t: %d, dt: %d\n", t, dt);
 
     // gravity
-    if(state->player_jump) {
-        state->player_y -= 1 * SCALE;
-        state->player_vy = -60;
-        state->player_jump = false;
+    if(state->player_y > ((SCREEN_HEIGHT - FLOOR_HEIGHT - PLAYER_HEIGHT) * SCALE)) {
+        state->player_vy = 0;
     } else {
-        if(state->player_y > ((SCREEN_HEIGHT - 5 - PLAYER_HEIGHT) * SCALE)) {
-            state->player_vy = 0;
-        } else {
-            state->player_vy += 5;
-        }
+        state->player_vy += 5;
     }
 
+    
+    update_player_coordinates(state, dt);
+}
+
+void update_player_coordinates(GameState* state, uint32_t dt) {
+    //x
     state->player_x += state->player_vx * dt;
+    //x screen
+    if (state->player_x < BONDARIES_X_LEFT * SCALE) {
+        state->player_x = BONDARIES_X_LEFT * SCALE;
+    } else if (state->player_x > (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE) {
+        state-> player_x = (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE;
+    }
+
+    //y
     state->player_y += state->player_vy * dt;
+    //y screen
+    if(state->player_y > ((SCREEN_HEIGHT - FLOOR_HEIGHT - PLAYER_HEIGHT) * SCALE)){
+        state->player_y = (SCREEN_HEIGHT - FLOOR_HEIGHT - PLAYER_HEIGHT) * SCALE;
+    }
+
 }
