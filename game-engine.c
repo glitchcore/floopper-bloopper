@@ -70,16 +70,25 @@ void floopper_bloopper(void* p) {
     digitalWrite(green, HIGH);
 
     GameState state = {
-        .player_x = (SCREEN_WIDTH/2 - PLAYER_WIDTH/2) * SCALE,
-        .player_y = (SCREEN_HEIGHT - FLOOR_HEIGHT - PLAYER_WIDTH) * SCALE,
-        .player_vx = 0,
-        .player_vy = 0,
+        .player = {
+            .x = (SCREEN_WIDTH/2 - PLAYER_WIDTH/2) * SCALE,
+            .y = (SCREEN_HEIGHT - FLOOR_HEIGHT - PLAYER_WIDTH) * SCALE,
+        },
+        .player_global = {
+            .x = (SCREEN_WIDTH/2 - PLAYER_WIDTH/2) * SCALE,
+            .y = (SCREEN_HEIGHT - FLOOR_HEIGHT - PLAYER_WIDTH) * SCALE,
+        },
+        .player_v = {.x = 0, .y = 0,},
+
         .player_jump = false,
         .player_anim = 0,
         .green = &green,
 
         .combo_panel_activated = false,
     };
+
+    state.screen.x = state.player_global.x - state.player.x;
+    state.screen.y = state.player_global.y - state.player.y;
 
     Event event;
 
