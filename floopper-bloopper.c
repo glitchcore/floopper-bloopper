@@ -48,6 +48,7 @@ static void event_cb(const void* value, size_t size, void* ctx) {
 
 typedef struct {
     uint8_t player_x;
+    GpioPin* green;
 } GameState;
 
 void render_graphics(GameState* state, u8g2_t* fb) {
@@ -63,6 +64,12 @@ void handle_key(GameState* state, InputEvent* input) {
         input->input,
         input->state ? "pressed" : "released"
     );
+}
+
+void handle_tick(GameState* state, uint32_t t, uint32_t dt) {
+    digitalWrite(*state->green, LOW);
+    delay(2);
+    digitalWrite(*state->green, HIGH);
 }
 
 void floopper_bloopper(void* p) {
@@ -88,16 +95,18 @@ void floopper_bloopper(void* p) {
     pinMode(green, GpioModeOpenDrain);
     digitalWrite(green, HIGH);
 
-    GameState state = {.player_x = 50};
+    GameState state = {
+        .player_x = 50,
+        .green = &green
+    };
 
     Event event;
 
     while(1) {
         if(xQueueReceive(event_queue, (void*)&event, portMAX_DELAY)) {
-            digitalWrite(green, LOW);
-
-            delay(2);
-            digitalWrite(green, HIGH);
+            if(event.type == EventTypeTick) {
+                handle_tick(&state, 0, 0);
+            }
 
             if(event.type == EventTypeKey) {
                 handle_key(&state, &event.value.input);
