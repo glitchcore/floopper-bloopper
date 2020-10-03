@@ -13,3 +13,5 @@ typedef struct {
 #define SCREEN_HEIGHT 64
 #define PLAYER_WIDTH 6
 #define PLAYER_HEIGHT 6
+#define SCALE 1000
+#define SPEED_X 50

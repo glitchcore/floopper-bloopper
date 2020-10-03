@@ -15,7 +15,7 @@ void render_graphics(GameState* state, u8g2_t* fb) {
 }
 
 void render_player(GameState* state, u8g2_t* fb) {
-    u8g2_DrawBox(fb, state->player_x / 1000, state->player_y, PLAYER_WIDTH, PLAYER_HEIGHT);
+    u8g2_DrawBox(fb, state->player_x / SCALE, state->player_y, PLAYER_WIDTH, PLAYER_HEIGHT);
 }
 
 void handle_key(GameState* state, InputEvent* input) {
@@ -27,9 +27,9 @@ void handle_key(GameState* state, InputEvent* input) {
 
     if(input->state) {
         if (input->input == InputRight) {
-            state->player_vx = 50;
+            state->player_vx = SPEED_X;
         } else if (input->input == InputLeft) {
-            state->player_vx = -50;
+            state->player_vx = -SPEED_X;
         }
     } else {
         if (input->input == InputRight || input->input == InputLeft) {
