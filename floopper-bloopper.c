@@ -19,6 +19,8 @@ void handle_key(GameState* state, InputEvent* input) {
 }
 
 void handle_tick(GameState* state, uint32_t t, uint32_t dt) {
+    printf("t: %d, dt: %d", t, dt);
+
     digitalWrite(*state->green, LOW);
     delay(2);
     digitalWrite(*state->green, HIGH);

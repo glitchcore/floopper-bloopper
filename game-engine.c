@@ -75,13 +75,22 @@ void floopper_bloopper(void* p) {
         .green = &green
     };
 
+    handle_init(GameState* state)
+
     Event event;
+
+    uint32_t t = xTaskGetTickCount();
+    uint32_t prev_t = 0;
 
     while(1) {
         if(xQueueReceive(event_queue, (void*)&event, portMAX_DELAY)) {
+        	t = xTaskGetTickCount();
+
             if(event.type == EventTypeTick) {
-                handle_tick(&state, 0, 0);
+                handle_tick(&state, t, (t - prev_t) % 1024);
             }
+
+            prev_t = t;
 
             if(event.type == EventTypeKey) {
                 handle_key(&state, &event.value.input);
