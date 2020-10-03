@@ -25,16 +25,14 @@ void handle_key(GameState* state, InputEvent* input) {
         input->state ? "pressed" : "released"
     );
 
-    if (input->input == InputRight) {
-        if (input->state) {
+    if(input->state) {
+        if (input->input == InputRight) {
             state->player_vx = 50;
-        } else {
-            state->player_vx = 0;
-        }
-    } else if (input->input == InputLeft) {
-        if (input->state) {
+        } else if (input->input == InputLeft) {
             state->player_vx = -50;
-        } else {
+        }
+    } else {
+        if (input->input == InputRight || input->input == InputLeft) {
             state->player_vx = 0;
         }
     }

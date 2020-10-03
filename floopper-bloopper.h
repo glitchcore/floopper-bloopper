@@ -5,6 +5,7 @@ typedef struct {
     int32_t player_x;
     int32_t player_y;
     int32_t player_vx;
+    int32_t player_yx;
     GpioPin* green;
 } GameState;
 
