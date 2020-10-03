@@ -15,6 +15,11 @@ void render_graphics(GameState* state, u8g2_t* fb) {
 }
 
 void render_player(GameState* state, u8g2_t* fb) {
+    if (state->player_x < BONDARIES_X_LEFT * SCALE) {
+        state->player_x = BONDARIES_X_LEFT * SCALE;
+    } else if (state->player_x > (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE) {
+        state-> player_x = (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE;
+    }
     u8g2_DrawBox(fb, state->player_x / SCALE, state->player_y, PLAYER_WIDTH, PLAYER_HEIGHT);
 }
 
