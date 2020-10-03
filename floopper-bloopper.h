@@ -7,6 +7,7 @@ typedef struct {
     int32_t player_vx;
     int32_t player_vy;
     bool player_jump;
+    uint8_t player_anim;
     GpioPin* green;
 } GameState;
 
@@ -15,7 +16,7 @@ typedef struct {
 #define BONDARIES_X_LEFT 20
 #define BONDARIES_X_RIGHT 108
 
-#define PLAYER_WIDTH 6
-#define PLAYER_HEIGHT 6
+#define PLAYER_WIDTH 8
+#define PLAYER_HEIGHT 12
 #define SCALE 1000
-#define SPEED_X 50
+#define SPEED_X 30

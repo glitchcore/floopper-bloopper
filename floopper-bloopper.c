@@ -3,6 +3,15 @@
 
 #include "floopper-bloopper/floopper-bloopper.h"
 
+#include "floopper-bloopper/player_0/player_0_0.xbm"
+#include "floopper-bloopper/player_0/player_0_1.xbm"
+#include "floopper-bloopper/player_0/player_0_2.xbm"
+#include "floopper-bloopper/player_0/player_0_3.xbm"
+#include "floopper-bloopper/player_0/player_0_4.xbm"
+#include "floopper-bloopper/player_0/player_0_5.xbm"
+#include "floopper-bloopper/player_0/player_0_6.xbm"
+
+
 void render_graphics(GameState* state, u8g2_t* fb) {
     u8g2_ClearBuffer(fb);
 
@@ -18,7 +27,38 @@ void render_player(GameState* state, u8g2_t* fb) {
         state-> player_x = (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE;
     }
 
-    u8g2_DrawBox(fb, state->player_x / SCALE, state->player_y / SCALE, PLAYER_WIDTH, PLAYER_HEIGHT);
+    unsigned char* player_sprite = NULL;
+
+    if(state->player_vy > 0) {
+        player_sprite = player_0_2_bits;
+    } else if(state->player_vy < 0) {
+        player_sprite = player_0_3_bits;
+    } else {
+        if(state->player_vx < 0) {
+            if(state->player_anim == 0) {
+                player_sprite = player_0_0_bits;
+            } else {
+                player_sprite = player_0_1_bits;
+            }
+        } else if(state->player_vx > 0) {
+            if(state->player_anim == 0) {
+                player_sprite = player_0_5_bits;
+            } else {
+                player_sprite = player_0_6_bits;
+            }
+        } else {
+            player_sprite = player_0_4_bits;
+        }
+    }
+
+    if(player_sprite != NULL) {
+        u8g2_DrawXBM(
+            fb,
+            state->player_x / SCALE, state->player_y / SCALE,
+            player_0_0_width, player_0_0_height,
+            (unsigned char*)player_sprite
+        );
+    }
 }
 
 void render_world(GameState* state, u8g2_t* fb) {
@@ -76,4 +116,6 @@ void handle_tick(GameState* state, uint32_t t, uint32_t dt) {
 
     state->player_x += state->player_vx * dt;
     state->player_y += state->player_vy * dt;
+
+    state->player_anim = (state->player_x / (SCALE * 4)) % 2;
 }
