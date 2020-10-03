@@ -72,6 +72,7 @@ void floopper_bloopper(void* p) {
     GameState state = {
         .player_x = SCREEN_WIDTH/2 - PLAYER_WIDTH/2,
         .player_y = SCREEN_HEIGHT - 5 - PLAYER_WIDTH,
+        .player_vx = 0,
         .green = &green
     };
 
