@@ -62,6 +62,7 @@ void render_player(GameState* state, u8g2_t* fb) {
 }
 
 void render_world(GameState* state, u8g2_t* fb) {
+    u8g2_SetDrawColor(fb, 1);
     u8g2_DrawBox(fb, 0, SCREEN_HEIGHT - 4, SCREEN_WIDTH, 4);
 }
 
@@ -70,6 +71,13 @@ void render_ui(GameState* state, u8g2_t* fb) {
     u8g2_SetDrawColor(fb, 1);
     u8g2_SetFontMode(fb, 1);
     u8g2_DrawStr(fb, 2, 12, "Floopper bloopper!");
+
+    if(state->combo_panel_activated) {
+        u8g2_SetDrawColor(fb, 0);
+        u8g2_DrawBox(fb, 0, SCREEN_HEIGHT - 4, SCREEN_WIDTH, 4);
+        u8g2_SetDrawColor(fb, 1);
+        u8g2_DrawFrame(fb, 10, 20, (SCREEN_WIDTH) - 10 * 2, 20);
+    }
 }
 
 void handle_key(GameState* state, InputEvent* input) {
@@ -96,6 +104,12 @@ void handle_key(GameState* state, InputEvent* input) {
             state->player_jump = true;
             state->player_vy = JUMP_SPEED;
             state->player_jump = false;
+        }
+    }
+
+    if(input->input == InputOk) {
+        if(input->state) {
+            state->combo_panel_activated = !state->combo_panel_activated;
         }
     }
 }

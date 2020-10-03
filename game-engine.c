@@ -76,7 +76,9 @@ void floopper_bloopper(void* p) {
         .player_vy = 0,
         .player_jump = false,
         .player_anim = 0,
-        .green = &green
+        .green = &green,
+
+        .combo_panel_activated = false,
     };
 
     Event event;

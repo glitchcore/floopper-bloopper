@@ -9,6 +9,8 @@ typedef struct {
     bool player_jump;
     uint8_t player_anim;
     GpioPin* green;
+
+    bool combo_panel_activated;
 } GameState;
 
 #define SCREEN_WIDTH 128
