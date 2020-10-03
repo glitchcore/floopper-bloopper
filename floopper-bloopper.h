@@ -2,9 +2,9 @@
 #include "u8g2/u8g2.h"
 
 typedef struct {
-    uint8_t player_x;
-    uint8_t player_y;
-    uint8_t player_vx;
+    int32_t player_x;
+    int32_t player_y;
+    int32_t player_vx;
     GpioPin* green;
 } GameState;
 
