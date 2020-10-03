@@ -3,8 +3,11 @@
 
 typedef struct {
     uint8_t player_x;
+    uint8_t player_y;
     GpioPin* green;
 } GameState;
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
+#define PLAYER_WIDTH 6
+#define PLAYER_HEIGHT 6

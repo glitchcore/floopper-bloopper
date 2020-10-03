@@ -70,7 +70,8 @@ void floopper_bloopper(void* p) {
     digitalWrite(green, HIGH);
 
     GameState state = {
-        .player_x = 50,
+        .player_x = SCREEN_WIDTH/2 - PLAYER_WIDTH/2,
+        .player_y = SCREEN_HEIGHT - 5 - PLAYER_WIDTH,
         .green = &green
     };
 
