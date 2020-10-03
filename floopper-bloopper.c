@@ -8,7 +8,7 @@ void render_graphics(GameState* state, u8g2_t* fb) {
     u8g2_SetDrawColor(fb, 1);
     u8g2_SetFontMode(fb, 1);
     u8g2_DrawStr(fb, 2, 12, "Floopper bloopper!");
-    u8g2_DrawBox(fb, SCREEN_WIDTH/2 - 3, SCREEN_HEIGHT-5-6, 6, 6);
+    u8g2_DrawBox(fb, SCREEN_WIDTH/2 - 3, SCREEN_HEIGHT - 5 - 6, 6, 6);
 }
 
 void handle_key(GameState* state, InputEvent* input) {

@@ -6,5 +6,5 @@ typedef struct {
     GpioPin* green;
 } GameState;
 
-const uint8_t SCREEN_WIDTH = 128;
-const uint8_t SCREEN_HEIGHT = 64;
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
