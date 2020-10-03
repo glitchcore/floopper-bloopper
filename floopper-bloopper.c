@@ -67,7 +67,10 @@ void render_world(GameState* state, u8g2_t* fb) {
     u8g2_SetFont(fb, u8g2_font_6x10_mf);
     u8g2_SetDrawColor(fb, 1);
     u8g2_SetFontMode(fb, 1);
-    u8g2_DrawStr(fb, LABEL_X - state->screen_x, LABEL_Y - state->screen_y, "Floopper bloopper!");
+    u8g2_DrawStr(fb,
+        (LABEL_X - state->screen_x) / SCALE, (LABEL_Y - state->screen_y) / SCALE,
+        "Floopper bloopper!"
+    );
 }
 
 void render_ui(GameState* state, u8g2_t* fb) {
@@ -133,7 +136,7 @@ void update_player_coordinates(GameState* state, uint32_t dt) {
     //y
     state->player_y += state->player_vy * dt;
 
-    state->player_anim = (state->player_x / (SCALE * 4)) % 2;
+    state->player_anim = (state->player_global_x / (SCALE * 4)) % 2;
 
     //y screen
     if(state->player_y >= ((SCREEN_HEIGHT - FLOOR_HEIGHT - PLAYER_HEIGHT) * SCALE)){

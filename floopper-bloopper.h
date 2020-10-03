@@ -19,7 +19,7 @@ typedef struct {
 } GameState;
 
 //global
-#define SCALE 1000
+#define SCALE 1024
 
 //screen
 #define SCREEN_WIDTH 128
@@ -39,5 +39,5 @@ typedef struct {
 #define WORLD_HIGHT 64
 #define FLOOR_HEIGHT 5
 
-#define LABEL_X 2
-#define LABEL_Y 12 
+#define LABEL_X 2 * SCALE
+#define LABEL_Y 12 * SCALE
