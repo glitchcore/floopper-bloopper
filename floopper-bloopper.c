@@ -21,6 +21,16 @@ void handle_key(GameState* state, InputEvent* input) {
         input->input,
         input->state ? "pressed" : "released"
     );
+
+    if (input->input == InputRight) {
+        if (input->state) {
+            state->player_x += 3;
+        }
+    } else if (input->input == InputLeft) {
+        if (input->state) {
+            state->player_x -= 3;
+        }
+    }
 }
 
 void handle_tick(GameState* state, uint32_t t, uint32_t dt) {
