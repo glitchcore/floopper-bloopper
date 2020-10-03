@@ -97,6 +97,8 @@ void floopper_bloopper(void* p) {
 
     while(1) {
         if(xQueueReceive(event_queue, (void*)&event, portMAX_DELAY)) {
+            // digitalWrite(green, LOW);
+
         	t = xTaskGetTickCount();
 
             if(event.type == EventTypeTick) {
@@ -114,6 +116,8 @@ void floopper_bloopper(void* p) {
                 render_graphics(&state, fb);
             }
             furi_commit(fb_record);
+
+            // digitalWrite(green, HIGH);
         }
     }
 }
