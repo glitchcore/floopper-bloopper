@@ -94,6 +94,8 @@ void handle_key(GameState* state, InputEvent* input) {
     if(input->input == InputUp) {
         if(input->state) {
             state->player_jump = true;
+            state->player_vy = JUMP_SPEED;
+            state->player_jump = false;
         }
     }
 }
@@ -101,21 +103,34 @@ void handle_key(GameState* state, InputEvent* input) {
 void handle_tick(GameState* state, uint32_t t, uint32_t dt) {
     // printf("t: %d, dt: %d\n", t, dt);
 
+    update_player_coordinates(state, dt);
+
     // gravity
-    if(state->player_jump) {
-        state->player_y -= 1 * SCALE;
-        state->player_vy = -60;
-        state->player_jump = false;
+    if(state->player_y >= ((SCREEN_HEIGHT - FLOOR_HEIGHT - PLAYER_HEIGHT) * SCALE)) {
+        state->player_vy = 0;
     } else {
-        if(state->player_y > ((SCREEN_HEIGHT - 5 - PLAYER_HEIGHT) * SCALE)) {
-            state->player_vy = 0;
-        } else {
-            state->player_vy += 5;
-        }
+        state->player_vy += 5;
+    }
+}
+
+void update_player_coordinates(GameState* state, uint32_t dt) {
+    //x
+    state->player_x += state->player_vx * dt;
+
+    //x screen
+    if (state->player_x < BONDARIES_X_LEFT * SCALE) {
+        state->player_x = BONDARIES_X_LEFT * SCALE;
+    } else if (state->player_x > (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE) {
+        state-> player_x = (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE;
     }
 
-    state->player_x += state->player_vx * dt;
+    //y
     state->player_y += state->player_vy * dt;
 
     state->player_anim = (state->player_x / (SCALE * 4)) % 2;
+
+    //y screen
+    if(state->player_y >= ((SCREEN_HEIGHT - FLOOR_HEIGHT - PLAYER_HEIGHT) * SCALE)){
+        state->player_y = (SCREEN_HEIGHT - FLOOR_HEIGHT - PLAYER_HEIGHT) * SCALE;
+    }
 }
