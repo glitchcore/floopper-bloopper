@@ -29,12 +29,11 @@ void tick_thread(void* p) {
 
     while(1){
         digitalWrite(red, LOW);
-        delay(2);
         digitalWrite(red, HIGH);
 
         xQueueSend(event_queue, (void*)&tick_event, 0);
 
-        delay(2000);
+        delay(500);
     }
 }
 
@@ -74,8 +73,6 @@ void floopper_bloopper(void* p) {
         .player_x = 50,
         .green = &green
     };
-
-    handle_init(GameState* state)
 
     Event event;
 
