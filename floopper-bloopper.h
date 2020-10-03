@@ -11,6 +11,7 @@ typedef struct {
     GpioPin* green;
 
     bool combo_panel_activated;
+    uint8_t combo_panel_cnt;
 } GameState;
 
 #define SCREEN_WIDTH 128

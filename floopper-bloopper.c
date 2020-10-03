@@ -87,6 +87,25 @@ void handle_key(GameState* state, InputEvent* input) {
         input->state ? "pressed" : "released"
     );
 
+    if(input->input == InputOk) {
+        if(input->state) {
+            if(!state->combo_panel_activated) {
+                state->combo_panel_cnt = 0;
+                state->combo_panel_activated = true;
+            } else {
+                state->combo_panel_activated = false;
+            }
+        }
+    }
+
+    if(state->combo_panel_activated) {
+
+    } else {
+        handle_player_input(state, input);
+    }
+}
+
+void handle_player_input(GameState* state, InputEvent* input) {
     if(input->state) {
         if (input->input == InputRight) {
             state->player_vx = SPEED_X;
@@ -104,12 +123,6 @@ void handle_key(GameState* state, InputEvent* input) {
             state->player_jump = true;
             state->player_vy = JUMP_SPEED;
             state->player_jump = false;
-        }
-    }
-
-    if(input->input == InputOk) {
-        if(input->state) {
-            state->combo_panel_activated = !state->combo_panel_activated;
         }
     }
 }
