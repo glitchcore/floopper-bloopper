@@ -33,8 +33,36 @@ void tick_thread(void* p) {
 
         xQueueSend(event_queue, (void*)&tick_event, 0);
 
-        delay(500);
+        delay(2000);
     }
+}
+
+static void event_cb(const void* value, size_t size, void* ctx) {
+    QueueHandle_t event_queue = (QueueHandle_t)ctx;
+
+    Event event;
+    event.type = EventTypeKey;
+    event.value.input = *(InputEvent*)value;
+    xQueueSend(event_queue, (void*)&event, 0);
+}
+
+typedef struct {
+    uint8_t player_x;
+} GameState;
+
+void render_graphics(GameState* state, u8g2_t* fb) {
+    u8g2_SetFont(fb, u8g2_font_6x10_mf);
+    u8g2_SetDrawColor(fb, 1);
+    u8g2_SetFontMode(fb, 1);
+    u8g2_DrawStr(fb, 2, 12, "Floopper bloopper!");
+}
+
+void handle_key(GameState* state, InputEvent* input) {
+    printf(
+        "[kb] event: %02x %s\n",
+        input->input,
+        input->state ? "pressed" : "released"
+    );
 }
 
 void floopper_bloopper(void* p) {
@@ -53,10 +81,14 @@ void floopper_bloopper(void* p) {
         furiac_exit(NULL);
     }
 
+    furi_open("input_events", false, false, event_cb, NULL, event_queue);
+
     GpioPin green = {.pin = GPIO_PIN_14, .port = GPIOB};
     // configure pin
     pinMode(green, GpioModeOpenDrain);
     digitalWrite(green, HIGH);
+
+    GameState state = {.player_x = 50};
 
     Event event;
 
@@ -64,17 +96,18 @@ void floopper_bloopper(void* p) {
         if(xQueueReceive(event_queue, (void*)&event, portMAX_DELAY)) {
             digitalWrite(green, LOW);
 
-            u8g2_t* fb = furi_take(fb_record);
-            if(fb != NULL) {
-                u8g2_SetFont(fb, u8g2_font_6x10_mf);
-                u8g2_SetDrawColor(fb, 1);
-                u8g2_SetFontMode(fb, 1);
-                u8g2_DrawStr(fb, 2, 12, "Floopper bloopper!");
-            }
-            furi_commit(fb_record);
-
             delay(2);
             digitalWrite(green, HIGH);
+
+            if(event.type == EventTypeKey) {
+                handle_key(&state, &event.value.input);
+            }
+
+            u8g2_t* fb = furi_take(fb_record);
+            if(fb != NULL) {
+                render_graphics(&state, fb);
+            }
+            furi_commit(fb_record);
         }
     }
 }
