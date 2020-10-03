@@ -63,13 +63,14 @@ void render_player(GameState* state, u8g2_t* fb) {
 
 void render_world(GameState* state, u8g2_t* fb) {
     u8g2_DrawBox(fb, 0, SCREEN_HEIGHT - 4, SCREEN_WIDTH, 4);
-}
 
-void render_ui(GameState* state, u8g2_t* fb) {
     u8g2_SetFont(fb, u8g2_font_6x10_mf);
     u8g2_SetDrawColor(fb, 1);
     u8g2_SetFontMode(fb, 1);
-    u8g2_DrawStr(fb, 2, 12, "Floopper bloopper!");
+    u8g2_DrawStr(fb, LABEL_X - state->screen_x, LABEL_Y - state->screen_y, "Floopper bloopper!");
+}
+
+void render_ui(GameState* state, u8g2_t* fb) {
 }
 
 void handle_key(GameState* state, InputEvent* input) {
@@ -116,6 +117,7 @@ void handle_tick(GameState* state, uint32_t t, uint32_t dt) {
 void update_player_coordinates(GameState* state, uint32_t dt) {
     //x
     state->player_x += state->player_vx * dt;
+    state->player_global_x += state->player_vx * dt;
 
     //x screen
     if (state->player_x < BONDARIES_X_LEFT * SCALE) {
@@ -123,6 +125,10 @@ void update_player_coordinates(GameState* state, uint32_t dt) {
     } else if (state->player_x > (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE) {
         state-> player_x = (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE;
     }
+
+    //x global
+    state->screen_x = state->player_global_x - state->player_x;
+    //if (state->player_global_x > WORLD_WIDTH - )
 
     //y
     state->player_y += state->player_vy * dt;
