@@ -161,6 +161,7 @@ void handle_key(GameState* state, InputEvent* input) {
     }
 
     if(input->input == InputDown) {
+        /*
         if(input->state) {
             //for tests
             if(state->in_boundaries){
@@ -169,6 +170,7 @@ void handle_key(GameState* state, InputEvent* input) {
                 state->in_boundaries = true;
             }
         }
+        */
     }
 
 
