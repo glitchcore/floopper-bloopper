@@ -225,6 +225,16 @@ void update_player_coordinates(GameState* state, uint32_t dt) {
         HEIGHT_MAP[(abs(state->player_global.x) / SCALE) % WORLD_WIDTH] -
         PLAYER_HEIGHT * SCALE;
 
+    int32_t f_h;
+    for(size_t i = 1; i < PLAYER_WIDTH; i++) {
+        f_h = SCREEN_HEIGHT * SCALE -
+            HEIGHT_MAP[(abs(state->player_global.x) / SCALE + i) % WORLD_WIDTH] -
+            PLAYER_HEIGHT * SCALE;
+        if (f_h < floor_height) {
+            floor_height = f_h;
+        }
+    }
+
     if(state->player_global.y >= floor_height){
         state->player.y = floor_height;
         state->player_global.y = floor_height;
