@@ -111,17 +111,6 @@ void handle_key(GameState* state, InputEvent* input) {
         handle_player_input(state, input);
     }
 
-    if(input->input == InputDown) {
-        if(input->state) {
-            //for tests
-            if(state->in_bondaries){
-                state->in_bondaries = false;
-            } else {
-                state->in_bondaries = true;
-            }
-        }
-    }
-
     if(input->input == InputOk) {
         if(input->state) {
             if(!state->combo_panel_activated) {

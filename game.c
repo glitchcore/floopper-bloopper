@@ -4,15 +4,20 @@ void update_game_state(GameState* state, uint32_t t, uint32_t dt) {
         case WELCOME:
             state->player_odo += state->player_v.x * dt;
 
-            if(
-                (abs((LABEL_X - state->screen.x) / SCALE)) % SCREEN_WIDTH < 10 &&
-                (state->player_odo / SCALE > 180 || state->player_odo / SCALE < -160)
-            ) {
-                state->player_t = t;
+            if(state->player_odo / SCALE > 180 || state->player_odo / SCALE < -160) {
                 state->glitch_level = 2;
             }
 
-            if(state->player_t > 0 && t - state->player_t > 3000) {
+            if(
+                (abs((LABEL_X - state->screen.x) / SCALE)) % 256 < 1 &&
+                state->glitch_level == 2 &&
+                state->player_t == 0
+            ) {
+                state->player_t = t;
+                state->in_boundaries = true;
+            }
+
+            if(state->player_t > 0 && t - state->player_t > 5000) {
                 state->player_t = t;
 
                 state->label_id = OMG;
@@ -75,6 +80,6 @@ void render_game_state(GameState* state, u8g2_t* fb) {
     u8g2_SetDrawColor(fb, 1);
     u8g2_SetFontMode(fb, 1);
 
-    sprintf(buf, "label: %d", abs((LABEL_X - state->screen.x) / SCALE) );
-    // u8g2_DrawStr(fb, 0, 40, buf);
+    sprintf(buf, "label: %d", (abs((LABEL_X - state->screen.x) / SCALE)) % 256);
+    u8g2_DrawStr(fb, 0, 40, buf);
 }

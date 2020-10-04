@@ -63,24 +63,13 @@ void handle_player_input(GameState* state, InputEvent* input) {
 }
 
 void update_player_coordinates(GameState* state, uint32_t dt) {
-    // apply kinemathic
-    if(state->in_bondaries){
-        int32_t x = state->player_v.x * dt;
-        if (x < BONDARIES_X_LEFT * SCALE) {
-            state->player.x = BONDARIES_X_LEFT * SCALE;
-        } else if (x > (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE) {
-            state-> player.x = (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE;
-        } else {
-            state-> player.x = x;
-        }
-        state->player_global.x = state->screen.x + state->player.x;
-    } else {
-        state->player.x += state->player_v.x * dt;
-        state->player_global.x += state->player_v.x * dt;
-    }
+    int32_t keep_global = state->player_global.y;
 
     state->player.y += state->player_v.y * dt;
     state->player_global.y += state->player_v.y * dt;
+
+    state->player.x += state->player_v.x * dt;
+    state->player_global.x += state->player_v.x * dt;
 
     // gravity + floor
 
@@ -109,8 +98,16 @@ void update_player_coordinates(GameState* state, uint32_t dt) {
     // aply constrains
     if (state->player.x < BONDARIES_X_LEFT * SCALE) {
         state->player.x = BONDARIES_X_LEFT * SCALE;
+
+        if(state->in_boundaries) {
+            // state->player_global.x = keep_global;
+        }
     } else if (state->player.x > (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE) {
         state-> player.x = (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE;
+
+        if(state->in_boundaries) {
+            // state->player_global.x = keep_global;
+        }
     }
 
     if(state->player.y > (SCREEN_HEIGHT - PLAYER_HEIGHT - 4) * SCALE) {
