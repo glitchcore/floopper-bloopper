@@ -23,9 +23,46 @@ void update_game_state(GameState* state, uint32_t t, uint32_t dt) {
         case OMG:
             if(t - state->player_t > 3000) {
                 state->label_id = OMG_HELP;
+                state->player_odo = 0;
             }
         break;
 
+        case OMG_HELP:
+            state->player_odo += state->player_v.x * dt;
+
+            if(state->player_odo / SCALE > WORLD_WIDTH * 0.8) {
+                state->label_id = WRONG;
+                state->player_odo = 0;
+            }
+
+            if(state->player_odo / SCALE < -WORLD_WIDTH * 0.8) {
+                state->label_id = STUCK;
+            }
+        break;
+
+        case STUCK:
+            if(state->player_v.y < -20) {
+                state->label_id = HELP_1;
+            }
+        break;
+
+        case HELP_1:
+            if(state->player_v.x < 0) {
+                state->label_id = HELP_2;
+            }
+        break;
+
+        case HELP_2:
+            if(state->player_v.x > 0) {
+                state->label_id = HELP_3;
+            }
+        break;
+
+        case HELP_3:
+            if(state->player_v.x < 0) {
+                state->label_id = DAMN;
+            }
+        break;
 
         default: break;
     }
