@@ -1,5 +1,5 @@
 
-void render_world(GameState* state, u8g2_t* fb) {
+void render_world(GameState* state, u8g2_t* fb, uint32_t t) {
     char buf[32];
 
     u8g2_SetDrawColor(fb, 1);
@@ -16,12 +16,18 @@ void render_world(GameState* state, u8g2_t* fb) {
     u8g2_SetDrawColor(fb, 1);
     u8g2_SetFontMode(fb, 1);
 
-    sprintf(buf, "odo: %d", state->player_odo);
-    u8g2_DrawStr(fb, 0, 40, buf);
+    if(t - state->glitch_t > 250) {
+        state->glitch_t = t;
+    }
 
     const TextBlock* label = &NARRATIVE[state->label_id];
     for(size_t i = 0; i < label->line_size; i++) {
         strcpy(buf, label->lines[i]);
+
+        for(size_t glitch = 0; glitch < state->glitch_level; glitch++) {
+            buf[(state->glitch_t + glitch * 23) % strlen(buf)] = 
+                ' ' + (state->glitch_t + glitch * 17) % ('z' - ' ');
+        }
 
         u8g2_DrawStr(fb,
             (LABEL_X - state->screen.x) / SCALE,

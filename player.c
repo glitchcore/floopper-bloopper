@@ -67,8 +67,6 @@ void update_player_coordinates(GameState* state, uint32_t dt) {
     state->player.x += state->player_v.x * dt;
     state->player_global.x += state->player_v.x * dt;
 
-    state->player_odo += state->player_v.x * dt;
-
     state->player.y += state->player_v.y * dt;
     state->player_global.y += state->player_v.y * dt;
 
