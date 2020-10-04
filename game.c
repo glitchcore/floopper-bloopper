@@ -13,8 +13,15 @@ void update_game_state(GameState* state, uint32_t t, uint32_t dt) {
                 state->glitch_level == 2 &&
                 state->player_t == 0
             ) {
-                state->player_t = t;
                 state->in_boundaries = true;
+            }
+
+            if(
+                (abs((LABEL_X - state->screen.x) / SCALE)) % 256 < 10 &&
+                state->glitch_level == 2 &&
+                state->player_t == 0
+            ) {
+                state->player_t = t;
             }
 
             if(state->player_t > 0 && t - state->player_t > 2000) {
@@ -71,8 +78,59 @@ void update_game_state(GameState* state, uint32_t t, uint32_t dt) {
         case HELP_3:
             if(state->player_v.x < 0) {
                 state->label_id = DAMN;
+                state->player_t = t;
             }
         break;
+
+        case DAMN:
+
+            if(t - state->player_t > 3000 && state->glitch_level == 0) {
+                state->player_t = t;
+                state->glitch_level = 5;
+            }
+
+            if(t - state->player_t > 5000 && state->glitch_level == 5) {
+                state->glitch_level = 0;
+                state->label_id = MANUAL_FOUND;
+            }
+        break;
+
+        case MANUAL_FOUND:
+            if(t - state->player_t > 2000) {
+                state->glitch_level = 0;
+                state->label_id = MANUAL;
+                state->player_odo = 0;
+                state->in_boundaries = false;
+            }
+        break;
+
+        case MANUAL:
+            state->player_odo += state->player_v.x * dt;
+
+            if(state->player_odo / SCALE > 180 || state->player_odo / SCALE < -160) {
+                state->label_id = TIP_0;
+                state->player_odo = 0;
+            }
+        break;
+
+        case TIP_0:
+            state->player_odo += state->player_v.x * dt;
+
+            if(state->player_odo / SCALE > 180 || state->player_odo / SCALE < -160) {
+                state->label_id = TIP_1;
+                state->player_odo = 0;
+            }
+        break;
+
+        case TIP_1:
+            state->player_odo += state->player_v.x * dt;
+            
+            if(state->player_odo / SCALE > 180 || state->player_odo / SCALE < -160) {
+                state->label_id = TIP_NO_HERE;
+            }
+        break;
+
+        // TIP_NO_HERE
 
         default: break;
     }
@@ -85,6 +143,6 @@ void render_game_state(GameState* state, u8g2_t* fb) {
     u8g2_SetDrawColor(fb, 1);
     u8g2_SetFontMode(fb, 1);
 
-    sprintf(buf, "label: %d", (abs((LABEL_X - state->screen.x) / SCALE)) % 256);
+    sprintf(buf, "odo: %d", state->player_odo);
     u8g2_DrawStr(fb, 0, 40, buf);
 }
