@@ -93,10 +93,12 @@ void render_ui(GameState* state, u8g2_t* fb) {
             CP_POSITION_Y,
             SCREEN_WIDTH - CP_POSITION_X * 2,
             CP_HEIGHT);
+
         //combo items
+        u8g2_SetFont(fb, u8g2_font_unifont_t_symbols);
         for(size_t i = 0; i < state->combo_panel_cnt; i++) {
             uint16_t item_x = CP_POSITION_X + CP_ITEM_WIDTH + (CP_ITEM_WIDTH + CP_ITEM_SPACE) * i;
-            uint16_t item_y = CP_POSITION_Y + (CP_HEIGHT - CP_ITEM_HEIGHT) / 2;
+            uint16_t item_y = CP_POSITION_Y + (CP_HEIGHT + CP_ITEM_HEIGHT) / 2;
             switch(combo[i]) {
                 case ComboInputUp: 
                     u8g2_DrawGlyph(fb, item_x, item_y, 9206);

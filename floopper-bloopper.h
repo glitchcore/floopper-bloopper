@@ -79,9 +79,9 @@ enum {
 #define CP_POSITION_X 10
 #define CP_POSITION_Y 20
 #define CP_HEIGHT 20
-#define CP_ITEM_WIDTH 16
-#define CP_ITEM_HEIGHT 16
+#define CP_ITEM_WIDTH 8
+#define CP_ITEM_HEIGHT 12
 #define CP_ITEM_SPACE 5
 #define CP_PROGRESS_HEIGHT 3
-#define COMBO_TIME 3000
+#define COMBO_TIME 1000
 #define COMBO_LENGTH 8
