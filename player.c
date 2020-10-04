@@ -63,24 +63,28 @@ void handle_player_input(GameState* state, InputEvent* input) {
 }
 
 void update_player_coordinates(GameState* state, uint32_t dt) {
-    // apply kinemathic
-    if(state->in_bondaries){
-        int32_t x = state->player_v.x * dt;
-        if (x < BONDARIES_X_LEFT * SCALE) {
-            state->player.x = BONDARIES_X_LEFT * SCALE;
-        } else if (x > (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE) {
-            state-> player.x = (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE;
-        } else {
-            state-> player.x = x;
-        }
-        state->player_global.x = state->screen.x + state->player.x;
-    } else {
-        state->player.x += state->player_v.x * dt;
-        state->player_global.x += state->player_v.x * dt;
-    }
-
     state->player.y += state->player_v.y * dt;
     state->player_global.y += state->player_v.y * dt;
+
+    if (state->player.x < BONDARIES_X_LEFT * SCALE) {
+        state->player.x = BONDARIES_X_LEFT * SCALE;
+    } else if (state->player.x > (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE) {
+        state-> player.x = (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE;
+    } else {
+        state->player.x += state->player_v.x * dt;
+    }
+
+    if (state->player.x <= BONDARIES_X_LEFT * SCALE) {
+        if(!state->in_boundaries) {
+            state->player_global.x += state->player_v.x * dt;
+        }
+    } else if (state->player.x >= (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE) {
+        if(!state->in_boundaries) {
+            state->player_global.x += state->player_v.x * dt;
+        }
+    } else {
+        state->player_global.x += state->player_v.x * dt;
+    }
 
     // gravity + floor
 
@@ -104,14 +108,7 @@ void update_player_coordinates(GameState* state, uint32_t dt) {
         state->player_v.y = 0;
     } else {
         state->player_v.y += 5;
-    }
-
-    // aply constrains
-    if (state->player.x < BONDARIES_X_LEFT * SCALE) {
-        state->player.x = BONDARIES_X_LEFT * SCALE;
-    } else if (state->player.x > (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE) {
-        state-> player.x = (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE;
-    }
+    }    
 
     if(state->player.y > (SCREEN_HEIGHT - PLAYER_HEIGHT - 4) * SCALE) {
         state->player.y = (SCREEN_HEIGHT - PLAYER_HEIGHT - 4) * SCALE;

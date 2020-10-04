@@ -80,7 +80,7 @@ void floopper_bloopper(void* p) {
         },
         .player_v = {.x = 0, .y = 0,},
 
-        .in_bondaries = false,
+        .in_boundaries = false,
         .player_jump = false,
         .player_anim = 0,
         .green = &green,
@@ -106,7 +106,7 @@ void floopper_bloopper(void* p) {
 
     while(1) {
         if(xQueueReceive(event_queue, (void*)&event, portMAX_DELAY)) {
-            digitalWrite(green, LOW);
+            // digitalWrite(green, LOW);
 
         	t = xTaskGetTickCount();
 
@@ -126,7 +126,7 @@ void floopper_bloopper(void* p) {
             }
             furi_commit(fb_record);
 
-            digitalWrite(green, HIGH);
+            // digitalWrite(green, HIGH);
         }
     }
 }
