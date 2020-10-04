@@ -9,15 +9,15 @@ void update_game_state(GameState* state, uint32_t t, uint32_t dt) {
             }
 
             if(
-                (abs((LABEL_X - state->screen.x) / SCALE)) % 256 < 1 &&
+                (abs((LABEL_X - state->screen.x) / SCALE)) % 256 < 2 &&
                 state->glitch_level == 2 &&
                 state->player_t == 0
             ) {
                 state->player_t = t;
-                // state->in_boundaries = true;
+                state->in_boundaries = true;
             }
 
-            if(state->player_t > 0 && t - state->player_t > 5000) {
+            if(state->player_t > 0 && t - state->player_t > 2000) {
                 state->player_t = t;
 
                 state->label_id = OMG;
@@ -28,6 +28,7 @@ void update_game_state(GameState* state, uint32_t t, uint32_t dt) {
         case OMG:
             if(t - state->player_t > 3000) {
                 state->label_id = OMG_HELP;
+                state->in_boundaries = false;
                 state->player_odo = 0;
             }
         break;
@@ -40,8 +41,12 @@ void update_game_state(GameState* state, uint32_t t, uint32_t dt) {
                 state->player_odo = 0;
             }
 
-            if(state->player_odo / SCALE < -WORLD_WIDTH * 0.8) {
+            if(
+                state->player_odo / SCALE < -WORLD_WIDTH * 0.8 &&
+                (abs((LABEL_X - state->screen.x) / SCALE)) % 256 < 2
+            ) {
                 state->label_id = STUCK;
+                state->in_boundaries = true;
             }
         break;
 
