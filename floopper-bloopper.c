@@ -64,7 +64,11 @@ typedef enum {
 } ComboInput;
 ComboInput combo[COMBO_LENGTH];
 
-ComboInput COMBO_PATTERNS[PATTERN_LENGTH][COMBO_LENGTH] =
+ComboInput COMBO_PATTERNS[PATTERN_LENGTH][COMBO_LENGTH] = {
+        {ComboInputLeft, ComboInputRight, ComboInputRight, ComboInputDown, ComboInputEmpty, ComboInputEmpty, ComboInputEmpty, ComboInputEmpty}, //text combo
+        {ComboInputLeft, ComboInputDown, ComboInputRight, ComboInputDown, ComboInputDown, ComboInputEmpty, ComboInputEmpty, ComboInputEmpty}, 
+        {ComboInputLeft, ComboInputUp, ComboInputRight, ComboInputDown, ComboInputEmpty, ComboInputEmpty, ComboInputEmpty, ComboInputEmpty}, 
+    };
 
 void render_ui(GameState* state, u8g2_t* fb);
 
@@ -135,6 +139,11 @@ void update_combo_process(GameState* state, uint32_t dt) {
         state->combo_progress -= state->combo_speed * dt;
     } else {
         state->combo_panel_activated = false;
+        if(!memcmp(COMBO_PATTERNS[0], combo, COMBO_LENGTH)) {
+            state->combo_text = true;
+        } else if(!memcmp(COMBO_PATTERNS[1], combo, COMBO_LENGTH)) {
+            state->combo_text = false;
+        }
     }
 }
 
@@ -170,6 +179,9 @@ void handle_key(GameState* state, InputEvent* input) {
                 state->combo_panel_activated = true;
                 state->combo_progress = 100 * SCALE;
                 state->combo_speed = ((SCREEN_WIDTH - CP_POSITION_X * 2) * 1000 * 0.5) / COMBO_TIME;
+                for(size_t i = 0; i < COMBO_LENGTH; i++){
+                    combo[i] = ComboInputEmpty;
+                }
             } else {
                 state->combo_panel_activated = false;
             }

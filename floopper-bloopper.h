@@ -29,6 +29,8 @@ typedef struct {
 
     int32_t player_odo;
     uint32_t player_t;
+
+    bool combo_text;
 } GameState;
 
 // global
