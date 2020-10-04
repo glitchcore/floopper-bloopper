@@ -21,35 +21,23 @@ typedef struct {
 } TextBlock;
 
 // narrative
-const TextBlock WELCOME = {3,
-    {"Welcome to Flopper blooper!", "Use < > to move", "Use ^ to jump"}
+const TextBlock NARRATIVE[] = {
+    {3, {"Welcome to Game!", "Use < > to move", "Use ^ to jump"}},
+    {3, {"OMG, it's happened", "again! Wait, I try", "to help you..."}},
+    {1, {"Please, return back"}},
+    {3, {"No, you dawn into", "cycle deeply!", " Go back"}},
+    {2, {"Okay, you stuck...", "try to press jump"}},
+    {1, {"...then left"}},
+    {1, {"...left again"}},
+    {1, {"...now press right"}},
+    {3, {"Damn, it worked", "before. I need to", "read manual"}},
+    {2, {"Hey! I found", "something helpful!"}},
+    {3, {"You need to activate", "DCMPA 0x3A77 trigger", "u know what it is?"}},
+    {3, {"Maybe some part of", "the earth looks", "special"}},
+    {1, {"Try to jump over it"}},
+    {1, {"Jump here!"}},
+    {1, {"No, not here..."}}
 };
-const TextBlock OMG = {2,
-    {"OMG, it's happened again!", "Wait, I try to help you...", "Please, return back"}
-};
-const TextBlock WRONG = {2,
-    {"No, you dawn into cycle deeply", "go back"}
-};
-const TextBlock STUCK = {2,
-    {"Okay, you stuck...", "try to press jump"}
-};
-const TextBlock HELP_1 = {1, {"...then left"}};
-const TextBlock HELP_2 = {1, {"...left again"}};
-const TextBlock HELP_3 = {1, {"...now press right"}};
-const TextBlock DAMN = {2, {"Damn, it worked before", "I need to read manual"}};
-
-const TextBlock MANUAL = {3,
-    {
-        "Hey! I found something helpful",
-        "You need to activate DCMPA 0x3A77",
-        "trigger, do you know what it is?"
-    }
-};
-
-const TextBlock TIP_0 = {2, {"Maybe some part of", "the earth looks special"}};
-const TextBlock TIP_1 = {1, {"Try to jump over it"}};
-const TextBlock TIP_HERE = {1, {"Jump here!"}};
-const TextBlock TIP_NO_HERE = {1, {"No, not here..."}};
 
 const int32_t HEIGHT_MAP[WORLD_WIDTH] = {
     5000, 5200, 5400, 5600, 5800, 6000, 6200, 6400, 6600, 6800, 7000, 7200, 7400, 7600, 7800, 8000,
@@ -127,38 +115,32 @@ void render_player(GameState* state, u8g2_t* fb) {
 
 void render_world(GameState* state, u8g2_t* fb) {
     char buf[32];
-
-    // u8g2_SetDrawColor(fb, 1);
-    // u8g2_DrawBox(fb, 0, SCREEN_HEIGHT - 4, SCREEN_WIDTH, 4);
-
     
 
     u8g2_SetDrawColor(fb, 1);
     for(size_t i = 0; i < SCREEN_WIDTH; i++) {
         int32_t floor_height = HEIGHT_MAP[abs(state->screen.x / SCALE + i) % WORLD_WIDTH];
 
-        // if(floor_height > 0) {
-            u8g2_DrawBox(fb,
-                i, SCREEN_HEIGHT - (floor_height - state->screen.y) / SCALE,
-                1, 5);
-        // }
+        u8g2_DrawBox(fb,
+            i, SCREEN_HEIGHT - (floor_height - state->screen.y) / SCALE,
+            1, 5);
     }
 
     // in-level label
     u8g2_SetFont(fb, u8g2_font_6x10_mf);
     u8g2_SetDrawColor(fb, 1);
     u8g2_SetFontMode(fb, 1);
-    u8g2_DrawStr(fb,
-        (LABEL_X - state->screen.x) / SCALE, (LABEL_Y + state->screen.y) / SCALE,
-        "Floopper bloopper!"
-    );
 
-    /*
-    u8g2_DrawBox(fb,
-        (5 * SCALE - state->screen.x) / SCALE, (10 * SCALE - state->screen.y) / SCALE,
-        10, 10
-    );
-    */
+    TextBlock* label = &NARRATIVE[state->label_id];
+    for(size_t i = 0; i < label->line_size; i++) {
+        strcpy(buf, label->lines[i]);
+
+        u8g2_DrawStr(fb,
+            (LABEL_X - state->screen.x) / SCALE,
+            ((LABEL_Y + LABEL_HEIGHT * i) + state->screen.y) / SCALE,
+            buf
+        );
+    }
 }
 
 void render_ui(GameState* state, u8g2_t* fb) {
@@ -265,4 +247,6 @@ void update_player_coordinates(GameState* state, uint32_t dt) {
     }
 
     state->player_anim = (state->player_global.x / (SCALE * 4)) % 2;
+
+    state->label_id = (state->player_global.x / (SCALE * 4)) % 15;
 }

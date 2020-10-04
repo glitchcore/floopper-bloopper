@@ -75,7 +75,7 @@ void floopper_bloopper(void* p) {
             .y = (SCREEN_HEIGHT/2) * SCALE,
         },
         .player_global = {
-            .x = 128 * SCALE,
+            .x = (SCREEN_WIDTH/2 - PLAYER_WIDTH/2) * SCALE,
             .y = (SCREEN_HEIGHT/2) * SCALE,
         },
         .player_v = {.x = 0, .y = 0,},
@@ -85,6 +85,10 @@ void floopper_bloopper(void* p) {
         .green = &green,
 
         .combo_panel_activated = false,
+
+        .label_id = WELCOME,
+
+        .glitch_level = 0,
     };
 
     state.screen.x = state.player_global.x - state.player.x;
