@@ -92,7 +92,7 @@ void render_ui(GameState* state, u8g2_t* fb) {
 
 
 void hadle_combo_input(GameState* state, InputEvent* input) {
-    if(input->state) {
+    if(input->state ) {
         combo[state->combo_panel_cnt] = input->input;
         state->combo_panel_cnt += 1;
     }
@@ -107,6 +107,12 @@ void handle_key(GameState* state, InputEvent* input) {
 
     if(input->input == InputOk) {
         if(input->state) {
+            //for tests
+            if(state->in_bondaries){
+                state->in_bondaries = false;
+            } else {
+                state->in_bondaries = true;
+            }
             if(!state->combo_panel_activated) {
                 state->combo_panel_cnt = 0;
                 state->combo_panel_activated = true;
