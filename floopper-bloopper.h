@@ -69,3 +69,12 @@ enum {
     TIP_HERE,
     TIP_NO_HERE,
 };
+
+//combo
+#define CP_POSITION_X 10
+#define CP_POSITION_Y 20
+#define CP_HEIGHT 20
+#define CP_ITEM_WIDTH 5
+#define CP_ITEM_HEIGHT 5
+#define CP_ITEM_SPACE 5
+#define COMBO_LENGTH 8
