@@ -20,7 +20,7 @@ typedef struct {
 
     bool combo_panel_activated;
     uint8_t combo_panel_cnt;
-    uint8_t combo_progress;
+    int32_t combo_progress;
     uint32_t combo_speed;
 
     size_t label_id;
