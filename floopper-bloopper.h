@@ -44,3 +44,5 @@ typedef struct {
 
 #define LABEL_X 2 * SCALE
 #define LABEL_Y 12 * SCALE
+
+#define TEST_BOX_SIZE 6

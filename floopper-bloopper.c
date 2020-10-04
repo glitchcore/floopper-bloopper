@@ -50,6 +50,25 @@ const TextBlock TIP_1 = {1, {"Try to jump over it"}};
 const TextBlock TIP_HERE = {1, {"Jump here!"}};
 const TextBlock TIP_NO_HERE = {1, {"No, not here..."}};
 
+const uint8_t HEIGHT_MAP[256] = {
+    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+};
+
 void render_player(GameState* state, u8g2_t* fb);
 void render_ui(GameState* state, u8g2_t* fb);
 void render_world(GameState* state, u8g2_t* fb);
@@ -106,6 +125,8 @@ void render_player(GameState* state, u8g2_t* fb) {
 }
 
 void render_world(GameState* state, u8g2_t* fb) {
+    char buf[32];
+
     u8g2_SetDrawColor(fb, 1);
     u8g2_DrawBox(fb, 0, SCREEN_HEIGHT - 4, SCREEN_WIDTH, 4);
 
@@ -173,9 +194,7 @@ void handle_player_input(GameState* state, InputEvent* input) {
 
     if(input->input == InputUp) {
         if(input->state) {
-            state->player_jump = true;
             state->player_v.y = JUMP_SPEED;
-            state->player_jump = false;
         }
     }
 }
@@ -185,37 +204,39 @@ void handle_tick(GameState* state, uint32_t t, uint32_t dt) {
 
     update_player_coordinates(state, dt);
 
-    // gravity
-    if(state->player.y >= ((SCREEN_HEIGHT - FLOOR_HEIGHT - PLAYER_HEIGHT) * SCALE)) {
-        state->player_v.y = 0;
-    } else {
-        state->player_v.y += 5;
-    }
+    
 }
 
 void update_player_coordinates(GameState* state, uint32_t dt) {
-    //x
+    // apply kinemathic
     state->player.x += state->player_v.x * dt;
     state->player_global.x += state->player_v.x * dt;
 
-    //x screen
+    state->player.y += state->player_v.y * dt;
+    state->player_global.y += state->player_v.y * dt;
+
+    // aply constrains
     if (state->player.x < BONDARIES_X_LEFT * SCALE) {
         state->player.x = BONDARIES_X_LEFT * SCALE;
     } else if (state->player.x > (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE) {
         state-> player.x = (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE;
     }
 
+    // gravity + floor
+    int32_t floor_height = FLOOR_HEIGHT;
+
+    if(state->player.y >= ((SCREEN_HEIGHT - floor_height - PLAYER_HEIGHT) * SCALE)){
+        state->player.y = (SCREEN_HEIGHT - floor_height - PLAYER_HEIGHT) * SCALE;
+        state->player_global.y = (SCREEN_HEIGHT - floor_height - PLAYER_HEIGHT) * SCALE;
+        state->player_v.y = 0;
+    } else {
+        state->player_v.y += 5;
+    }
+
     //x global
     state->screen.x = state->player_global.x - state->player.x;
+    state->screen.y = state->player_global.y - state->player.y;
     //if (state->player_global_x > WORLD_WIDTH - )
 
-    //y
-    state->player.y += state->player_v.y * dt;
-
     state->player_anim = (state->player_global.x / (SCALE * 4)) % 2;
-
-    //y screen
-    if(state->player.y >= ((SCREEN_HEIGHT - FLOOR_HEIGHT - PLAYER_HEIGHT) * SCALE)){
-        state->player.y = (SCREEN_HEIGHT - FLOOR_HEIGHT - PLAYER_HEIGHT) * SCALE;
-    }
 }
