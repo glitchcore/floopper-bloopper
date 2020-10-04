@@ -41,6 +41,6 @@ void render_world(GameState* state, u8g2_t* fb, uint32_t t) {
         u8g2_DrawBox(fb, SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, 25);
         u8g2_SetDrawColor(fb, 1);
         u8g2_DrawFrame(fb, SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, 25);
-        u8g2_DrawStr(fb, SCREEN_WIDTH / 2 + 10, 20, 'COCOCOCOMBO!');
+        u8g2_DrawStr(fb, SCREEN_WIDTH / 2 + 10, 20, "COCOCOCOMBO!");
     }
 }
