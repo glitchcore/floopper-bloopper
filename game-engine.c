@@ -70,13 +70,36 @@ void floopper_bloopper(void* p) {
     digitalWrite(green, HIGH);
 
     GameState state = {
-        .player_x = (SCREEN_WIDTH/2 - PLAYER_WIDTH/2) * SCALE,
-        .player_y = (SCREEN_HEIGHT - 5 - PLAYER_WIDTH) * SCALE,
-        .player_vx = 0,
-        .player_vy = 0,
+        .player = {
+            .x = (SCREEN_WIDTH/2 - PLAYER_WIDTH/2) * SCALE,
+            .y = (SCREEN_HEIGHT/2) * SCALE,
+        },
+        .player_global = {
+            .x = (SCREEN_WIDTH/2 - PLAYER_WIDTH/2) * SCALE,
+            .y = (SCREEN_HEIGHT/2) * SCALE,
+        },
+        .player_v = {.x = 0, .y = 0,},
+
+        .in_boundaries = false,
         .player_jump = false,
-        .green = &green
+        .player_anim = 0,
+        .green = &green,
+
+        .combo_panel_activated = false,
+
+        .label_id = WELCOME,
+
+        .glitch_level = 0,
+        .glitch_t = 0,
+
+        .player_odo = 0,
+        .player_t = 0,
+
+        .combo_text = false,
     };
+
+    state.screen.x = state.player_global.x - state.player.x;
+    state.screen.y = state.player_global.y - state.player.y;
 
     Event event;
 
@@ -85,6 +108,8 @@ void floopper_bloopper(void* p) {
 
     while(1) {
         if(xQueueReceive(event_queue, (void*)&event, portMAX_DELAY)) {
+            // digitalWrite(green, LOW);
+
         	t = xTaskGetTickCount();
 
             if(event.type == EventTypeTick) {
@@ -99,9 +124,11 @@ void floopper_bloopper(void* p) {
 
             u8g2_t* fb = furi_take(fb_record);
             if(fb != NULL) {
-                render_graphics(&state, fb);
+                render_graphics(&state, fb, t);
             }
             furi_commit(fb_record);
+
+            // digitalWrite(green, HIGH);
         }
     }
 }
