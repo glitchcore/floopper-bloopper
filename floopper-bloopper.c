@@ -69,20 +69,27 @@ void render_ui(GameState* state, u8g2_t* fb);
 void render_graphics(GameState* state, u8g2_t* fb, uint32_t t) {
     u8g2_ClearBuffer(fb);
 
-    render_ui(state, fb);
     render_world(state, fb, t);
     render_player(state, fb);
     render_game_state(state, fb);
+    render_ui(state, fb);
 }
 
 void render_ui(GameState* state, u8g2_t* fb) {
     if(state->combo_panel_activated) {
         u8g2_SetDrawColor(fb, 0);
-        //u8g2_DrawBox(fb, 0, SCREEN_HEIGHT - 4, SCREEN_WIDTH, 4);
         u8g2_DrawBox(fb, CP_POSITION_X, CP_POSITION_Y, (SCREEN_WIDTH) - CP_POSITION_X * 2, CP_HEIGHT);
         u8g2_SetDrawColor(fb, 1);
-        u8g2_DrawBox(fb, CP_POSITION_X, CP_POSITION_Y - CP_PROGRESS_HEIGHT, (SCREEN_WIDTH - CP_POSITION_X * 2) * state->combo_progress / 100, CP_PROGRESS_HEIGHT);
-        u8g2_DrawFrame(fb, CP_POSITION_X, CP_POSITION_Y, SCREEN_WIDTH - CP_POSITION_X * 2, CP_HEIGHT);
+        u8g2_DrawBox(fb,
+            CP_POSITION_X,
+            CP_POSITION_Y - CP_PROGRESS_HEIGHT,
+            (SCREEN_WIDTH - CP_POSITION_X * 2) * state->combo_progress / 100,
+            CP_PROGRESS_HEIGHT);
+        u8g2_DrawFrame(fb,
+            CP_POSITION_X,
+            CP_POSITION_Y,
+            SCREEN_WIDTH - CP_POSITION_X * 2,
+            CP_HEIGHT);
         for(size_t i = 0; i < state->combo_panel_cnt; i++) {
             u8g2_DrawBox(fb, 
                 CP_POSITION_X + CP_ITEM_WIDTH + (CP_ITEM_WIDTH + CP_ITEM_SPACE) * i, 
@@ -94,16 +101,16 @@ void render_ui(GameState* state, u8g2_t* fb) {
 
 
 void hadle_combo_input(GameState* state, InputEvent* input) {
-    if(input->state ) {
+    if(input->state) {
         combo[state->combo_panel_cnt] = input->input;
         state->combo_progress = 100;
         state->combo_panel_cnt += 1;
-        state->combo_speed = (SCREEN_WIDTH - CP_POSITION_X * 2) / (COMBO_TIME * state->combo_panel_cnt) ;
+        state->combo_speed = ((SCREEN_WIDTH - CP_POSITION_X * 2) * 1000) / (COMBO_TIME * state->combo_panel_cnt) ;
     }
 }
 
 void update_combo_process(GameState* state, uint32_t dt) {
-    if(state->combo_panel_activated & state->combo_progress) {
+    if(state->combo_panel_activated && state->combo_progress) {
         state->combo_progress -= state->combo_speed * dt;
     }
 }
@@ -137,6 +144,9 @@ void handle_key(GameState* state, InputEvent* input) {
             if(!state->combo_panel_activated) {
                 state->combo_panel_cnt = 0;
                 state->combo_panel_activated = true;
+
+                state->combo_progress = 50;
+                state->combo_speed = 1;
             } else {
                 state->combo_panel_activated = false;
             }
