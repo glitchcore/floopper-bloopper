@@ -1,5 +1,6 @@
 #include "flipper.h"
 #include "u8g2/u8g2.h"
+#include <stdio.h>
 
 #include "floopper-bloopper/floopper-bloopper.h"
 
@@ -11,6 +12,49 @@
 #include "floopper-bloopper/player_0/player_0_5.xbm"
 #include "floopper-bloopper/player_0/player_0_6.xbm"
 
+#define MAX_LINES 4
+
+typedef struct {
+    size_t line_size;
+    char* lines[MAX_LINES];
+} TextBlock;
+
+// narrative
+const TextBlock WELCOME = {3,
+    {"Welcome to Flopper blooper!", "Use < > to move", "Use ^ to jump"}
+};
+const TextBlock OMG = {2,
+    {"OMG, it's happened again!", "Wait, I try to help you...", "Please, return back"}
+};
+const TextBlock WRONG = {2,
+    {"No, you dawn into cycle deeply", "go back"}
+};
+const TextBlock STUCK = {2,
+    {"Okay, you stuck...", "try to press jump"}
+};
+const TextBlock HELP_1 = {1, {"...then left"}};
+const TextBlock HELP_2 = {1, {"...left again"}};
+const TextBlock HELP_3 = {1, {"...now press right"}};
+const TextBlock DAMN = {2, {"Damn, it worked before", "I need to read manual"}};
+
+const TextBlock MANUAL = {3,
+    {
+        "Hey! I found something helpful",
+        "You need to activate DCMPA 0x3A77",
+        "trigger, do you know what it is?"
+    }
+};
+
+const TextBlock TIP_0 = {2, {"Maybe some part of", "the earth looks special"}};
+const TextBlock TIP_1 = {1, {"Try to jump over it"}};
+const TextBlock TIP_HERE = {1, {"Jump here!"}};
+const TextBlock TIP_NO_HERE = {1, {"No, not here..."}};
+
+void render_player(GameState* state, u8g2_t* fb);
+void render_ui(GameState* state, u8g2_t* fb);
+void render_world(GameState* state, u8g2_t* fb);
+void handle_player_input(GameState* state, InputEvent* input);
+void update_player_coordinates(GameState* state, uint32_t dt);
 
 void render_graphics(GameState* state, u8g2_t* fb) {
     u8g2_ClearBuffer(fb);
@@ -30,24 +74,24 @@ void render_player(GameState* state, u8g2_t* fb) {
     unsigned char* player_sprite = NULL;
 
     if(state->player_v.y > 0) {
-        player_sprite = player_0_2_bits;
+        player_sprite = (unsigned char*)player_0_2_bits;
     } else if(state->player_v.y < 0) {
-        player_sprite = player_0_3_bits;
+        player_sprite = (unsigned char*)player_0_3_bits;
     } else {
         if(state->player_v.x < 0) {
             if(state->player_anim == 0) {
-                player_sprite = player_0_0_bits;
+                player_sprite = (unsigned char*)player_0_0_bits;
             } else {
-                player_sprite = player_0_1_bits;
+                player_sprite = (unsigned char*)player_0_1_bits;
             }
         } else if(state->player_v.x > 0) {
             if(state->player_anim == 0) {
-                player_sprite = player_0_5_bits;
+                player_sprite = (unsigned char*)player_0_5_bits;
             } else {
-                player_sprite = player_0_6_bits;
+                player_sprite = (unsigned char*)player_0_6_bits;
             }
         } else {
-            player_sprite = player_0_4_bits;
+            player_sprite = (unsigned char*)player_0_4_bits;
         }
     }
 
