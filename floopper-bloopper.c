@@ -104,6 +104,12 @@ void handle_key(GameState* state, InputEvent* input) {
         input->state ? "pressed" : "released"
     );
 
+    if(state->combo_panel_activated) {
+        hadle_combo_input(state, input);
+    } else {
+        handle_player_input(state, input);
+    }
+
     if(input->input == InputOk) {
         if(input->state) {
             if(!state->combo_panel_activated) {
@@ -113,12 +119,6 @@ void handle_key(GameState* state, InputEvent* input) {
                 state->combo_panel_activated = false;
             }
         }
-    }
-
-    if(state->combo_panel_activated) {
-        hadle_combo_input(state, input);
-    } else {
-        handle_player_input(state, input);
     }
 }
 
