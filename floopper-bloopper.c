@@ -109,7 +109,7 @@ void hadle_combo_input(GameState* state, InputEvent* input) {
         combo[state->combo_panel_cnt] = input->input;
         state->combo_progress = 100 * SCALE;
         state->combo_panel_cnt += 1;
-        state->combo_speed = ((SCREEN_WIDTH - CP_POSITION_X * 2) * 1000 * state->combo_panel_cnt) / COMBO_TIME ;
+        state->combo_speed = ((SCREEN_WIDTH - CP_POSITION_X * 2) * 1000 * state->combo_panel_cnt) / COMBO_TIME;
     }
 }
 
@@ -151,7 +151,7 @@ void handle_key(GameState* state, InputEvent* input) {
                 state->combo_panel_cnt = 0;
                 state->combo_panel_activated = true;
                 state->combo_progress = 100 * SCALE;
-                state->combo_speed = 1;
+                state->combo_speed = ((SCREEN_WIDTH - CP_POSITION_X * 2) * 1000 * 0.5) / COMBO_TIME;
             } else {
                 state->combo_panel_activated = false;
             }
