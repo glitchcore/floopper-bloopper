@@ -78,18 +78,22 @@ void render_graphics(GameState* state, u8g2_t* fb, uint32_t t) {
 void render_ui(GameState* state, u8g2_t* fb) {
     if(state->combo_panel_activated) {
         u8g2_SetDrawColor(fb, 0);
+        //combo box background
         u8g2_DrawBox(fb, CP_POSITION_X, CP_POSITION_Y, (SCREEN_WIDTH) - CP_POSITION_X * 2, CP_HEIGHT);
         u8g2_SetDrawColor(fb, 1);
+        //progress
         u8g2_DrawBox(fb,
             CP_POSITION_X,
             CP_POSITION_Y - CP_PROGRESS_HEIGHT,
-            (SCREEN_WIDTH - CP_POSITION_X * 2) * state->combo_progress / 100,
+            (SCREEN_WIDTH - CP_POSITION_X * 2) * state->combo_progress / ( 100 * SCALE ),
             CP_PROGRESS_HEIGHT);
+        //combo box frame
         u8g2_DrawFrame(fb,
             CP_POSITION_X,
             CP_POSITION_Y,
             SCREEN_WIDTH - CP_POSITION_X * 2,
             CP_HEIGHT);
+        //combo items
         for(size_t i = 0; i < state->combo_panel_cnt; i++) {
             u8g2_DrawBox(fb, 
                 CP_POSITION_X + CP_ITEM_WIDTH + (CP_ITEM_WIDTH + CP_ITEM_SPACE) * i, 
@@ -103,7 +107,7 @@ void render_ui(GameState* state, u8g2_t* fb) {
 void hadle_combo_input(GameState* state, InputEvent* input) {
     if(input->state) {
         combo[state->combo_panel_cnt] = input->input;
-        state->combo_progress = 100;
+        state->combo_progress = 100 * SCALE;
         state->combo_panel_cnt += 1;
         state->combo_speed = ((SCREEN_WIDTH - CP_POSITION_X * 2) * 1000) / (COMBO_TIME * state->combo_panel_cnt) ;
     }
@@ -112,6 +116,8 @@ void hadle_combo_input(GameState* state, InputEvent* input) {
 void update_combo_process(GameState* state, uint32_t dt) {
     if(state->combo_panel_activated && state->combo_progress) {
         state->combo_progress -= state->combo_speed * dt;
+    } else {
+        state->combo_panel_activated = false;
     }
 }
 
@@ -144,8 +150,7 @@ void handle_key(GameState* state, InputEvent* input) {
             if(!state->combo_panel_activated) {
                 state->combo_panel_cnt = 0;
                 state->combo_panel_activated = true;
-
-                state->combo_progress = 50;
+                state->combo_progress = 100 * SCALE;
                 state->combo_speed = 1;
             } else {
                 state->combo_panel_activated = false;
