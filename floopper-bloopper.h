@@ -22,6 +22,8 @@ typedef struct {
 
     size_t label_id;
     uint8_t glitch_level;
+
+    int32_t player_odo;
 } GameState;
 
 // global

@@ -89,6 +89,8 @@ void floopper_bloopper(void* p) {
         .label_id = WELCOME,
 
         .glitch_level = 0,
+
+        .player_odo = 0,
     };
 
     state.screen.x = state.player_global.x - state.player.x;

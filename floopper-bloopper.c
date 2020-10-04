@@ -126,6 +126,9 @@ void render_world(GameState* state, u8g2_t* fb) {
     u8g2_SetDrawColor(fb, 1);
     u8g2_SetFontMode(fb, 1);
 
+    sprintf(buf, "odo: %d", state->player_odo);
+    u8g2_DrawStr(fb, 0, 40, buf);
+
     const TextBlock* label = &NARRATIVE[state->label_id];
     for(size_t i = 0; i < label->line_size; i++) {
         strcpy(buf, label->lines[i]);
@@ -202,7 +205,7 @@ void handle_tick(GameState* state, uint32_t t, uint32_t dt) {
 void update_game_state(GameState* state) {
     switch(state->label_id) {
         case WELCOME:
-            if(abs(state->player_global.x / SCALE) % WORLD_WIDTH > WORLD_WIDTH * 0.9) {
+            if(state->player_odo / SCALE > 180 || state->player_odo / SCALE < -160) {
                 state->label_id = OMG;
             }
         break;
@@ -215,6 +218,8 @@ void update_player_coordinates(GameState* state, uint32_t dt) {
     // apply kinemathic
     state->player.x += state->player_v.x * dt;
     state->player_global.x += state->player_v.x * dt;
+
+    state->player_odo += state->player_v.x * dt;
 
     state->player.y += state->player_v.y * dt;
     state->player_global.y += state->player_v.y * dt;
