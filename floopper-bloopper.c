@@ -66,12 +66,13 @@ ComboInput combo[COMBO_LENGTH];
 
 void render_ui(GameState* state, u8g2_t* fb);
 
-void render_graphics(GameState* state, u8g2_t* fb) {
+void render_graphics(GameState* state, u8g2_t* fb, uint32_t t) {
     u8g2_ClearBuffer(fb);
 
     render_ui(state, fb);
-    render_world(state, fb);
+    render_world(state, fb, t);
     render_player(state, fb);
+    render_game_state(state, fb);
 }
 
 void render_ui(GameState* state, u8g2_t* fb) {
@@ -126,5 +127,5 @@ void handle_tick(GameState* state, uint32_t t, uint32_t dt) {
     // printf("t: %d, dt: %d\n", t, dt);
 
     update_player_coordinates(state, dt);
-    update_game_state(state);
+    update_game_state(state, t, dt);
 }

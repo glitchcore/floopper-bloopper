@@ -89,8 +89,10 @@ void floopper_bloopper(void* p) {
         .label_id = WELCOME,
 
         .glitch_level = 0,
+        .glitch_t = 0,
 
         .player_odo = 0,
+        .player_t = 0,
     };
 
     state.screen.x = state.player_global.x - state.player.x;
@@ -119,7 +121,7 @@ void floopper_bloopper(void* p) {
 
             u8g2_t* fb = furi_take(fb_record);
             if(fb != NULL) {
-                render_graphics(&state, fb);
+                render_graphics(&state, fb, t);
             }
             furi_commit(fb_record);
 
