@@ -95,10 +95,23 @@ void render_ui(GameState* state, u8g2_t* fb) {
             CP_HEIGHT);
         //combo items
         for(size_t i = 0; i < state->combo_panel_cnt; i++) {
-            u8g2_DrawBox(fb, 
-                CP_POSITION_X + CP_ITEM_WIDTH + (CP_ITEM_WIDTH + CP_ITEM_SPACE) * i, 
-                CP_POSITION_Y + (CP_HEIGHT - CP_ITEM_HEIGHT) / 2, 
-                CP_ITEM_WIDTH, CP_ITEM_HEIGHT);
+            uint16_t item_x = CP_POSITION_X + CP_ITEM_WIDTH + (CP_ITEM_WIDTH + CP_ITEM_SPACE) * i;
+            uint16_t item_y = CP_POSITION_Y + (CP_HEIGHT - CP_ITEM_HEIGHT) / 2;
+            switch(combo[i]) {
+                case ComboInputUp: 
+                    u8g2_DrawGlyph(fb, item_x, item_y, 9206);
+                break;
+                case ComboInputDown: 
+                    u8g2_DrawGlyph(fb, item_x, item_y, 9207);
+                break;
+                case ComboInputRight: 
+                    u8g2_DrawGlyph(fb, item_x, item_y, 9205);
+                break;
+                case ComboInputLeft: 
+                    u8g2_DrawGlyph(fb, item_x, item_y, 9204);
+                break;
+                default: break;
+            }
         }
     }
 }
