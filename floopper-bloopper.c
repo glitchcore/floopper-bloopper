@@ -52,13 +52,10 @@ const int32_t HEIGHT_MAP[WORLD_WIDTH] = {
 };
 
 #include "floopper-bloopper/player.c"
+#include "floopper-bloopper/world.c"
+#include "floopper-bloopper/game.c"
 
-void render_player(GameState* state, u8g2_t* fb);
 void render_ui(GameState* state, u8g2_t* fb);
-void render_world(GameState* state, u8g2_t* fb);
-void handle_player_input(GameState* state, InputEvent* input);
-void update_player_coordinates(GameState* state, uint32_t dt);
-void update_game_state(GameState* state);
 
 void render_graphics(GameState* state, u8g2_t* fb) {
     u8g2_ClearBuffer(fb);
@@ -66,38 +63,6 @@ void render_graphics(GameState* state, u8g2_t* fb) {
     render_ui(state, fb);
     render_world(state, fb);
     render_player(state, fb);
-}
-
-void render_world(GameState* state, u8g2_t* fb) {
-    char buf[32];
-
-    u8g2_SetDrawColor(fb, 1);
-    for(size_t i = 0; i < SCREEN_WIDTH; i++) {
-        int32_t floor_height = HEIGHT_MAP[abs(state->screen.x / SCALE + i) % WORLD_WIDTH];
-
-        u8g2_DrawBox(fb,
-            i, SCREEN_HEIGHT - (floor_height - state->screen.y) / SCALE,
-            1, 5);
-    }
-
-    // in-level label
-    u8g2_SetFont(fb, u8g2_font_6x10_mf);
-    u8g2_SetDrawColor(fb, 1);
-    u8g2_SetFontMode(fb, 1);
-
-    sprintf(buf, "odo: %d", state->player_odo);
-    u8g2_DrawStr(fb, 0, 40, buf);
-
-    const TextBlock* label = &NARRATIVE[state->label_id];
-    for(size_t i = 0; i < label->line_size; i++) {
-        strcpy(buf, label->lines[i]);
-
-        u8g2_DrawStr(fb,
-            (LABEL_X - state->screen.x) / SCALE,
-            ((LABEL_Y + LABEL_HEIGHT * i) + state->screen.y) / SCALE,
-            buf
-        );
-    }
 }
 
 void render_ui(GameState* state, u8g2_t* fb) {
@@ -139,16 +104,4 @@ void handle_tick(GameState* state, uint32_t t, uint32_t dt) {
 
     update_player_coordinates(state, dt);
     update_game_state(state);
-}
-
-void update_game_state(GameState* state) {
-    switch(state->label_id) {
-        case WELCOME:
-            if(state->player_odo / SCALE > 180 || state->player_odo / SCALE < -160) {
-                state->label_id = OMG;
-            }
-        break;
-
-        default: break;
-    }
 }
