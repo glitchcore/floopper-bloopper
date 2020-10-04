@@ -80,6 +80,7 @@ void floopper_bloopper(void* p) {
         },
         .player_v = {.x = 0, .y = 0,},
 
+        .in_bondaries = false,
         .player_jump = false,
         .player_anim = 0,
         .green = &green,
