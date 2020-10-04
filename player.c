@@ -73,7 +73,7 @@ void update_player_coordinates(GameState* state, uint32_t dt) {
         } else {
             state-> player.x = x;
         }
-        state->player_global.x = state->screen.x + player.x;
+        state->player_global.x = state->screen.x + state->player.x;
     } else {
         state->player.x += state->player_v.x * dt;
         state->player_global.x += state->player_v.x * dt;
