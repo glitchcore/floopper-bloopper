@@ -63,6 +63,7 @@ void render_ui(GameState* state, u8g2_t* fb);
 void render_world(GameState* state, u8g2_t* fb);
 void handle_player_input(GameState* state, InputEvent* input);
 void update_player_coordinates(GameState* state, uint32_t dt);
+void update_game_state(GameState* state);
 
 void render_graphics(GameState* state, u8g2_t* fb) {
     u8g2_ClearBuffer(fb);
@@ -73,12 +74,6 @@ void render_graphics(GameState* state, u8g2_t* fb) {
 }
 
 void render_player(GameState* state, u8g2_t* fb) {
-    if (state->player.x < BONDARIES_X_LEFT * SCALE) {
-        state->player.x = BONDARIES_X_LEFT * SCALE;
-    } else if (state->player.x > (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE) {
-        state-> player.x = (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE;
-    }
-
     unsigned char* player_sprite = NULL;
 
     if(state->player_v.y > 40) {
@@ -201,7 +196,10 @@ void handle_tick(GameState* state, uint32_t t, uint32_t dt) {
     // printf("t: %d, dt: %d\n", t, dt);
 
     update_player_coordinates(state, dt);
+    update_game_state(state);
+}
 
+void update_game_state(GameState* state) {
     
 }
 
@@ -247,6 +245,4 @@ void update_player_coordinates(GameState* state, uint32_t dt) {
     }
 
     state->player_anim = (state->player_global.x / (SCALE * 4)) % 2;
-
-    state->label_id = (state->player_global.x / (SCALE * 4)) % 15;
 }
