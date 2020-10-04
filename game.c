@@ -14,7 +14,7 @@ void update_game_state(GameState* state, uint32_t t, uint32_t dt) {
                 state->player_t == 0
             ) {
                 state->player_t = t;
-                state->in_boundaries = true;
+                // state->in_boundaries = true;
             }
 
             if(state->player_t > 0 && t - state->player_t > 5000) {
