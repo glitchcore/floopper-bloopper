@@ -86,6 +86,7 @@ void floopper_bloopper(void* p) {
         .green = &green,
 
         .combo_panel_activated = false,
+        .combo_progress = 100,
 
         .label_id = WELCOME,
 

@@ -20,6 +20,8 @@ typedef struct {
 
     bool combo_panel_activated;
     uint8_t combo_panel_cnt;
+    uint8_t combo_progress;
+    uint32_t combo_speed;
 
     size_t label_id;
     uint8_t glitch_level;
@@ -80,4 +82,6 @@ enum {
 #define CP_ITEM_WIDTH 5
 #define CP_ITEM_HEIGHT 5
 #define CP_ITEM_SPACE 5
+#define CP_PROGRESS_HEIGHT 3
+#define COMBO_TIME 3000
 #define COMBO_LENGTH 8
