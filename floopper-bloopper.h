@@ -29,6 +29,8 @@ typedef struct {
 
     int32_t player_odo;
     uint32_t player_t;
+
+    bool combo_text;
 } GameState;
 
 // global
@@ -85,3 +87,4 @@ enum {
 #define CP_PROGRESS_HEIGHT 3
 #define COMBO_TIME 1000
 #define COMBO_LENGTH 8
+#define PATTERN_LENGTH 3

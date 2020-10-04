@@ -94,6 +94,8 @@ void floopper_bloopper(void* p) {
 
         .player_odo = 0,
         .player_t = 0,
+
+        .combo_text = false,
     };
 
     state.screen.x = state.player_global.x - state.player.x;
