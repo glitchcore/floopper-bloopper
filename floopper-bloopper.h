@@ -85,3 +85,4 @@ enum {
 #define CP_PROGRESS_HEIGHT 3
 #define COMBO_TIME 3000
 #define COMBO_LENGTH 8
+#define PATTERN_LENGTH 3

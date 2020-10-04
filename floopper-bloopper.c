@@ -60,9 +60,11 @@ typedef enum {
     ComboInputDown,
     ComboInputRight,
     ComboInputLeft,
-    ComboInputOk,
+    ComboInputEmpty,
 } ComboInput;
 ComboInput combo[COMBO_LENGTH];
+
+ComboInput COMBO_PATTERNS[PATTERN_LENGTH][COMBO_LENGTH] =
 
 void render_ui(GameState* state, u8g2_t* fb);
 
