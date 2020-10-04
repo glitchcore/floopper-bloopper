@@ -65,8 +65,8 @@ typedef enum {
 ComboInput combo[COMBO_LENGTH];
 
 ComboInput COMBO_PATTERNS[PATTERN_LENGTH][COMBO_LENGTH] = {
-        {ComboInputLeft, ComboInputRight, ComboInputRight, ComboInputDown, ComboInputEmpty, ComboInputEmpty, ComboInputEmpty, ComboInputEmpty}, //text combo
-        {ComboInputLeft, ComboInputDown, ComboInputRight, ComboInputDown, ComboInputDown, ComboInputEmpty, ComboInputEmpty, ComboInputEmpty}, 
+        {ComboInputLeft, ComboInputRight, ComboInputRight, ComboInputDown, ComboInputEmpty, ComboInputEmpty, ComboInputEmpty, ComboInputEmpty}, //text combo <>>!
+        {ComboInputLeft, ComboInputDown, ComboInputRight, ComboInputDown, ComboInputDown, ComboInputEmpty, ComboInputEmpty, ComboInputEmpty}, //text combo off <!>!!
         {ComboInputLeft, ComboInputUp, ComboInputRight, ComboInputDown, ComboInputEmpty, ComboInputEmpty, ComboInputEmpty, ComboInputEmpty}, 
     };
 
