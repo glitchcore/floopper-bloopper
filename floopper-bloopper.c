@@ -21,8 +21,8 @@ const TextBlock NARRATIVE[] = {
     {3, {"No, you dawn into", "cycle deeply!", " Go back"}},
     {2, {"Okay, you stuck...", "try to press jump"}},
     {1, {"...then left"}},
+    {1, {"...then right"}},
     {1, {"...left again"}},
-    {1, {"...now press right"}},
     {3, {"Damn, it worked", "before. I need to", "read manual"}},
     {2, {"Hey! I found", "something helpful!"}},
     {3, {"You need to activate", "DCMPA 0x3A77 trigger", "u know what it is?"}},
@@ -152,13 +152,14 @@ void handle_key(GameState* state, InputEvent* input) {
     if(input->input == InputDown) {
         if(input->state) {
             //for tests
-            if(state->in_bondaries){
-                state->in_bondaries = false;
+            if(state->in_boundaries){
+                state->in_boundaries = false;
             } else {
-                state->in_bondaries = true;
+                state->in_boundaries = true;
             }
         }
     }
+
 
     if(input->input == InputOk) {
         if(input->state) {

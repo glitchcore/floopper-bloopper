@@ -13,7 +13,7 @@ typedef struct {
     
     Vec2 screen;
 
-    bool in_bondaries;
+    bool in_boundaries;
     bool player_jump;
     uint8_t player_anim;
     GpioPin* green;
