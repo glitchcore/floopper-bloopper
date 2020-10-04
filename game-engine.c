@@ -72,11 +72,11 @@ void floopper_bloopper(void* p) {
     GameState state = {
         .player = {
             .x = (SCREEN_WIDTH/2 - PLAYER_WIDTH/2) * SCALE,
-            .y = (SCREEN_HEIGHT - FLOOR_HEIGHT - PLAYER_WIDTH) * SCALE,
+            .y = (SCREEN_HEIGHT/2) * SCALE,
         },
         .player_global = {
-            .x = (SCREEN_WIDTH/2 - PLAYER_WIDTH/2) * SCALE,
-            .y = (SCREEN_HEIGHT - FLOOR_HEIGHT - PLAYER_WIDTH) * SCALE,
+            .x = 128 * SCALE,
+            .y = (SCREEN_HEIGHT/2) * SCALE,
         },
         .player_v = {.x = 0, .y = 0,},
 

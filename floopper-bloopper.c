@@ -1,6 +1,7 @@
 #include "flipper.h"
 #include "u8g2/u8g2.h"
 #include <stdio.h>
+#include <math.h>
 
 #include "floopper-bloopper/floopper-bloopper.h"
 
@@ -50,23 +51,23 @@ const TextBlock TIP_1 = {1, {"Try to jump over it"}};
 const TextBlock TIP_HERE = {1, {"Jump here!"}};
 const TextBlock TIP_NO_HERE = {1, {"No, not here..."}};
 
-const uint8_t HEIGHT_MAP[256] = {
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+const int32_t HEIGHT_MAP[WORLD_WIDTH] = {
+    5000, 5200, 5400, 5600, 5800, 6000, 6200, 6400, 6600, 6800, 7000, 7200, 7400, 7600, 7800, 8000,
+    8200, 8400, 8600, 8800, 9000, 9200, 9400, 9600, 9800, 10000, 10200, 10400, 10600, 10800, 11000, 5000,
+    5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000,
+    5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000,
+    5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000,
+    5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000,
+    5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000,
+    5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000,
+    5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000,
+    5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000,
+    5000, 4500, 4000, 3500, 3000, 2500, 2000, 1500, 1000, 500, 0, -500, -1000, -2000, -3000, -4000,
+    -5000, -5000, -5000, -5000, -5000, -5000, -5000, -5000, -5000, -5000, -5000, -5000, -5000, -5000, -5000, -5000,
+    -4000, -3000, -2500, -2000, -1500, -500, 0, 500, 1200, 1800, 2500, 3000, 3500, 4000, 4500, 5000,
+    5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000,
+    5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000,
+    5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000,
 };
 
 void render_player(GameState* state, u8g2_t* fb);
@@ -92,9 +93,9 @@ void render_player(GameState* state, u8g2_t* fb) {
 
     unsigned char* player_sprite = NULL;
 
-    if(state->player_v.y > 0) {
+    if(state->player_v.y > 40) {
         player_sprite = (unsigned char*)player_0_2_bits;
-    } else if(state->player_v.y < 0) {
+    } else if(state->player_v.y < -40) {
         player_sprite = (unsigned char*)player_0_3_bits;
     } else {
         if(state->player_v.x < 0) {
@@ -127,22 +128,37 @@ void render_player(GameState* state, u8g2_t* fb) {
 void render_world(GameState* state, u8g2_t* fb) {
     char buf[32];
 
-    u8g2_SetDrawColor(fb, 1);
-    u8g2_DrawBox(fb, 0, SCREEN_HEIGHT - 4, SCREEN_WIDTH, 4);
+    // u8g2_SetDrawColor(fb, 1);
+    // u8g2_DrawBox(fb, 0, SCREEN_HEIGHT - 4, SCREEN_WIDTH, 4);
 
+    
+
+    u8g2_SetDrawColor(fb, 1);
+    for(size_t i = 0; i < SCREEN_WIDTH; i++) {
+        int32_t floor_height = HEIGHT_MAP[abs(state->screen.x / SCALE + i) % WORLD_WIDTH];
+
+        // if(floor_height > 0) {
+            u8g2_DrawBox(fb,
+                i, SCREEN_HEIGHT - (floor_height - state->screen.y) / SCALE,
+                1, 5);
+        // }
+    }
+
+    // in-level label
     u8g2_SetFont(fb, u8g2_font_6x10_mf);
     u8g2_SetDrawColor(fb, 1);
     u8g2_SetFontMode(fb, 1);
-
     u8g2_DrawStr(fb,
-        (LABEL_X - state->screen.x) / SCALE, (LABEL_Y - state->screen.y) / SCALE,
+        (LABEL_X - state->screen.x) / SCALE, (LABEL_Y + state->screen.y) / SCALE,
         "Floopper bloopper!"
     );
 
+    /*
     u8g2_DrawBox(fb,
         (5 * SCALE - state->screen.x) / SCALE, (10 * SCALE - state->screen.y) / SCALE,
         10, 10
     );
+    */
 }
 
 void render_ui(GameState* state, u8g2_t* fb) {
@@ -215,6 +231,20 @@ void update_player_coordinates(GameState* state, uint32_t dt) {
     state->player.y += state->player_v.y * dt;
     state->player_global.y += state->player_v.y * dt;
 
+    // gravity + floor
+
+    int32_t floor_height = SCREEN_HEIGHT * SCALE -
+        HEIGHT_MAP[(abs(state->player_global.x) / SCALE) % WORLD_WIDTH] -
+        PLAYER_HEIGHT * SCALE;
+
+    if(state->player_global.y >= floor_height){
+        state->player.y = floor_height;
+        state->player_global.y = floor_height;
+        state->player_v.y = 0;
+    } else {
+        state->player_v.y += 5;
+    }
+
     // aply constrains
     if (state->player.x < BONDARIES_X_LEFT * SCALE) {
         state->player.x = BONDARIES_X_LEFT * SCALE;
@@ -222,21 +252,17 @@ void update_player_coordinates(GameState* state, uint32_t dt) {
         state-> player.x = (BONDARIES_X_RIGHT - PLAYER_WIDTH) * SCALE;
     }
 
-    // gravity + floor
-    int32_t floor_height = FLOOR_HEIGHT;
-
-    if(state->player.y >= ((SCREEN_HEIGHT - floor_height - PLAYER_HEIGHT) * SCALE)){
-        state->player.y = (SCREEN_HEIGHT - floor_height - PLAYER_HEIGHT) * SCALE;
-        state->player_global.y = (SCREEN_HEIGHT - floor_height - PLAYER_HEIGHT) * SCALE;
-        state->player_v.y = 0;
-    } else {
-        state->player_v.y += 5;
+    if(state->player.y > (SCREEN_HEIGHT - PLAYER_HEIGHT - 4) * SCALE) {
+        state->player.y = (SCREEN_HEIGHT - PLAYER_HEIGHT - 4) * SCALE;
     }
 
-    //x global
+    // global
     state->screen.x = state->player_global.x - state->player.x;
-    state->screen.y = state->player_global.y - state->player.y;
-    //if (state->player_global_x > WORLD_WIDTH - )
+    state->screen.y = state->player.y - state->player_global.y;
+    
+    if (state->player_global.x < BONDARIES_X_LEFT * SCALE) {
+        state->player_global.x += WORLD_WIDTH * SCALE;
+    }
 
     state->player_anim = (state->player_global.x / (SCALE * 4)) % 2;
 }
