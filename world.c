@@ -6,9 +6,7 @@ void render_world(GameState* state, u8g2_t* fb, uint32_t t) {
     for(size_t i = 0; i < SCREEN_WIDTH; i++) {
         int32_t floor_height = HEIGHT_MAP[abs(state->screen.x / SCALE + i) % WORLD_WIDTH];
 
-        u8g2_DrawBox(fb,
-            i, SCREEN_HEIGHT - (floor_height - state->screen.y) / SCALE,
-            1, 5);
+        u8g2_DrawBox(fb, i, SCREEN_HEIGHT - (floor_height - state->screen.y) / SCALE, 1, 5);
     }
 
     // in-level label
@@ -25,15 +23,15 @@ void render_world(GameState* state, u8g2_t* fb, uint32_t t) {
         strcpy(buf, label->lines[i]);
 
         for(size_t glitch = 0; glitch < state->glitch_level; glitch++) {
-            buf[(state->glitch_t + glitch * 23) % strlen(buf)] = 
+            buf[(state->glitch_t + glitch * 23) % strlen(buf)] =
                 ' ' + (state->glitch_t + glitch * 17) % ('z' - ' ');
         }
 
-        u8g2_DrawStr(fb,
+        u8g2_DrawStr(
+            fb,
             (LABEL_X - state->screen.x) / SCALE,
             ((LABEL_Y + LABEL_HEIGHT * i) + state->screen.y) / SCALE,
-            buf
-        );
+            buf);
     }
 
     if(state->combo_text) {

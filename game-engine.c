@@ -22,12 +22,12 @@ void tick_thread(void* p) {
 
     // create pin
     GpioPin red = {.pin = GPIO_PIN_8, .port = GPIOA};
-    
+
     // configure pin
     pinMode(red, GpioModeOpenDrain);
     digitalWrite(red, HIGH);
 
-    while(1){
+    while(1) {
         digitalWrite(red, LOW);
         digitalWrite(red, HIGH);
 
@@ -70,15 +70,21 @@ void floopper_bloopper(void* p) {
     digitalWrite(green, HIGH);
 
     GameState state = {
-        .player = {
-            .x = (SCREEN_WIDTH/2 - PLAYER_WIDTH/2) * SCALE,
-            .y = (SCREEN_HEIGHT/2) * SCALE,
-        },
-        .player_global = {
-            .x = (SCREEN_WIDTH/2 - PLAYER_WIDTH/2) * SCALE,
-            .y = (SCREEN_HEIGHT/2) * SCALE,
-        },
-        .player_v = {.x = 0, .y = 0,},
+        .player =
+            {
+                .x = (SCREEN_WIDTH / 2 - PLAYER_WIDTH / 2) * SCALE,
+                .y = (SCREEN_HEIGHT / 2) * SCALE,
+            },
+        .player_global =
+            {
+                .x = (SCREEN_WIDTH / 2 - PLAYER_WIDTH / 2) * SCALE,
+                .y = (SCREEN_HEIGHT / 2) * SCALE,
+            },
+        .player_v =
+            {
+                .x = 0,
+                .y = 0,
+            },
 
         .in_boundaries = false,
         .player_jump = false,
@@ -96,6 +102,8 @@ void floopper_bloopper(void* p) {
         .player_t = 0,
 
         .combo_text = false,
+
+        .next_level = false,
     };
 
     state.screen.x = state.player_global.x - state.player.x;
@@ -110,7 +118,7 @@ void floopper_bloopper(void* p) {
         if(xQueueReceive(event_queue, (void*)&event, portMAX_DELAY)) {
             // digitalWrite(green, LOW);
 
-        	t = xTaskGetTickCount();
+            t = xTaskGetTickCount();
 
             if(event.type == EventTypeTick) {
                 handle_tick(&state, t, (t - prev_t) % 1024);

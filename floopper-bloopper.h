@@ -10,7 +10,7 @@ typedef struct {
     Vec2 player;
     Vec2 player_global;
     Vec2 player_v;
-    
+
     Vec2 screen;
 
     bool in_boundaries;
@@ -31,6 +31,8 @@ typedef struct {
     uint32_t player_t;
 
     bool combo_text;
+
+    bool next_level;
 } GameState;
 
 // global
@@ -41,7 +43,6 @@ typedef struct {
 #define SCREEN_HEIGHT 64
 #define BONDARIES_X_LEFT 20
 #define BONDARIES_X_RIGHT 108
-
 
 // player
 #define PLAYER_WIDTH 9
