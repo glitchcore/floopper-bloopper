@@ -1,3 +1,5 @@
+#include "flipper_v2.h"
+#include "floopper-bloopper/floopper-bloopper.h"
 
 #include "floopper-bloopper/player_0/player_0_0.xbm"
 #include "floopper-bloopper/player_0/player_0_1.xbm"
@@ -7,7 +9,7 @@
 #include "floopper-bloopper/player_0/player_0_5.xbm"
 #include "floopper-bloopper/player_0/player_0_6.xbm"
 
-void render_player(GameState* state, u8g2_t* fb) {
+void render_player(GameState* state, CanvasApi* canvas) {
     unsigned char* player_sprite = NULL;
 
     if(state->player_v.y > 40) {
@@ -33,8 +35,8 @@ void render_player(GameState* state, u8g2_t* fb) {
     }
 
     if(player_sprite != NULL) {
-        u8g2_DrawXBM(
-            fb,
+        canvas->draw_xbm(
+            canvas,
             state->player.x / SCALE,
             state->player.y / SCALE,
             player_0_0_width,

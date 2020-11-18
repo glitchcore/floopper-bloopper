@@ -1,20 +1,12 @@
-#include "flipper.h"
-#include "u8g2/u8g2.h"
+#include "flipper_v2.h"
+#include "floopper-bloopper/floopper-bloopper.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-#include "floopper-bloopper/floopper-bloopper.h"
-
-#define MAX_LINES 4
-
-typedef struct {
-    size_t line_size;
-    char* lines[MAX_LINES];
-} TextBlock;
-
 // narrative
-const TextBlock NARRATIVE[] = {
+const TextBlock NARRATIVE[15] = {
     {3, {"Welcome to Game!", "Use < > to move", "Use ^ to jump"}},
     {3, {"OMG, it's happened", "again! Wait, I try", "to help you..."}},
     {1, {"Please, return back"}},
@@ -54,10 +46,6 @@ const int32_t HEIGHT_MAP[WORLD_WIDTH] = {
     5000,  5000,  5000,  5000,  5000,  5000,  5000,  5000,  5000,
 };
 
-#include "floopper-bloopper/player.c"
-#include "floopper-bloopper/world.c"
-#include "floopper-bloopper/game.c"
-
 typedef enum {
     ComboInputUp = 0,
     ComboInputDown,
@@ -94,52 +82,56 @@ ComboInput COMBO_PATTERNS[PATTERN_LENGTH][COMBO_LENGTH] = {
      ComboInputEmpty},
 };
 
-void render_ui(GameState* state, u8g2_t* fb);
+void render_graphics(CanvasApi* canvas, void* ctx) {
+    GameState* state = (GameState*)acquire_mutex((ValueMutex*)ctx, 25);
+    uint32_t t = xTaskGetTickCount();
 
-void render_graphics(GameState* state, u8g2_t* fb, uint32_t t) {
-    u8g2_ClearBuffer(fb);
+    canvas->clear(canvas);
 
-    render_world(state, fb, t);
-    render_player(state, fb);
-    render_game_state(state, fb);
-    render_ui(state, fb);
+    render_world(state, canvas, t);
+    render_player(state, canvas);
+    render_game_state(state, canvas);
+    render_ui(state, canvas);
+
+    release_mutex((ValueMutex*)ctx, state);
 }
 
-void render_ui(GameState* state, u8g2_t* fb) {
+void render_ui(GameState* state, CanvasApi* canvas) {
     if(state->combo_panel_activated) {
-        u8g2_SetDrawColor(fb, 0);
+        canvas->set_color(canvas, ColorWhite);
         //combo box background
-        u8g2_DrawBox(
-            fb, CP_POSITION_X, CP_POSITION_Y, (SCREEN_WIDTH)-CP_POSITION_X * 2, CP_HEIGHT);
-        u8g2_SetDrawColor(fb, 1);
+        canvas->draw_box(
+            canvas, CP_POSITION_X, CP_POSITION_Y, (SCREEN_WIDTH)-CP_POSITION_X * 2, CP_HEIGHT);
+        canvas->set_color(canvas, ColorBlack);
         //progress
-        u8g2_DrawBox(
-            fb,
+        canvas->draw_box(
+            canvas,
             CP_POSITION_X,
             CP_POSITION_Y - CP_PROGRESS_HEIGHT,
             (SCREEN_WIDTH - CP_POSITION_X * 2) * state->combo_progress / (100 * SCALE),
             CP_PROGRESS_HEIGHT);
         //combo box frame
-        u8g2_DrawFrame(
-            fb, CP_POSITION_X, CP_POSITION_Y, SCREEN_WIDTH - CP_POSITION_X * 2, CP_HEIGHT);
+        canvas->draw_frame(
+            canvas, CP_POSITION_X, CP_POSITION_Y, SCREEN_WIDTH - CP_POSITION_X * 2, CP_HEIGHT);
 
         //combo items
-        u8g2_SetFont(fb, u8g2_font_unifont_t_symbols);
+        canvas->set_font(canvas, FontGlyph);
+
         for(size_t i = 0; i < state->combo_panel_cnt; i++) {
             uint16_t item_x = CP_POSITION_X + CP_ITEM_WIDTH + (CP_ITEM_WIDTH + CP_ITEM_SPACE) * i;
             uint16_t item_y = CP_POSITION_Y + (CP_HEIGHT + CP_ITEM_HEIGHT) / 2;
             switch(combo[i]) {
             case ComboInputUp:
-                u8g2_DrawGlyph(fb, item_x, item_y, 9206);
+                canvas->draw_glyph(canvas, item_x, item_y, 9206);
                 break;
             case ComboInputDown:
-                u8g2_DrawGlyph(fb, item_x, item_y, 9207);
+                canvas->draw_glyph(canvas, item_x, item_y, 9207);
                 break;
             case ComboInputRight:
-                u8g2_DrawGlyph(fb, item_x, item_y, 9205);
+                canvas->draw_glyph(canvas, item_x, item_y, 9205);
                 break;
             case ComboInputLeft:
-                u8g2_DrawGlyph(fb, item_x, item_y, 9204);
+                canvas->draw_glyph(canvas, item_x, item_y, 9204);
                 break;
             default:
                 break;
@@ -172,7 +164,7 @@ void update_combo_process(GameState* state, uint32_t dt) {
 }
 
 void handle_key(GameState* state, InputEvent* input) {
-    printf("[kb] event: %02x %s\n", input->input, input->state ? "pressed" : "released");
+    // printf("[kb] event: %02x %s\n", input->input, input->state ? "pressed" : "released");
 
     if(state->combo_panel_activated) {
         hadle_combo_input(state, input);

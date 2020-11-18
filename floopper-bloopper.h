@@ -16,7 +16,6 @@ typedef struct {
     bool in_boundaries;
     bool player_jump;
     uint8_t player_anim;
-    GpioPin* green;
 
     bool combo_panel_activated;
     uint8_t combo_panel_cnt;
@@ -89,3 +88,29 @@ enum {
 #define COMBO_TIME 1000
 #define COMBO_LENGTH 8
 #define PATTERN_LENGTH 3
+
+const int32_t HEIGHT_MAP[WORLD_WIDTH];
+
+#define MAX_LINES 4
+
+typedef struct {
+    size_t line_size;
+    char* lines[MAX_LINES];
+} TextBlock;
+
+const TextBlock NARRATIVE[15];
+
+void render_world(GameState* state, CanvasApi* canvas, uint32_t t);
+
+void render_player(GameState* state, CanvasApi* canvas);
+void handle_player_input(GameState* state, InputEvent* input);
+void update_player_coordinates(GameState* state, uint32_t dt);
+
+void render_game_state(GameState* state, CanvasApi* canvas);
+void update_game_state(GameState* state, uint32_t t, uint32_t dt);
+
+void render_ui(GameState* state, CanvasApi* canvas);
+
+void render_graphics(CanvasApi* canvas, void* ctx);
+void handle_tick(GameState* state, uint32_t t, uint32_t dt);
+void handle_key(GameState* state, InputEvent* input);

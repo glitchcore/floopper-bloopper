@@ -1,3 +1,5 @@
+#include "flipper_v2.h"
+#include "floopper-bloopper/floopper-bloopper.h"
 
 void update_game_state(GameState* state, uint32_t t, uint32_t dt) {
     switch(state->label_id) {
@@ -139,13 +141,14 @@ void update_game_state(GameState* state, uint32_t t, uint32_t dt) {
     }
 }
 
-void render_game_state(GameState* state, u8g2_t* fb) {
+void render_game_state(GameState* state, CanvasApi* canvas) {
+    /*
     char buf[32];
 
-    u8g2_SetFont(fb, u8g2_font_6x10_mf);
-    u8g2_SetDrawColor(fb, 1);
-    u8g2_SetFontMode(fb, 1);
+    canvas->set_font(canvas, FontSecondary);
+    canvas->set_color(canvas, ColorBlack);
 
-    sprintf(buf, "x: %d", (state->player_global.x / SCALE) % WORLD_WIDTH);
-    u8g2_DrawStr(fb, 0, 40, buf);
+    sprintf(buf, "x: %ld", (state->player_global.x / SCALE) % WORLD_WIDTH);
+    canvas->draw_str(canvas, 0, 40, buf);
+    */
 }
