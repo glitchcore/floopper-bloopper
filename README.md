@@ -4,3 +4,9 @@
 
 
 Place code in `applications` folder of main firmware and add BUILD_FLOOPPER_BLOOPPER to build flags.
+
+## Demo
+
+https://www.youtube.com/watch?v=oPoBad8aBoA
+
+(music is not mine, from YT collections)
