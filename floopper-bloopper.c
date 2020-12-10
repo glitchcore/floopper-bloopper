@@ -82,11 +82,11 @@ ComboInput COMBO_PATTERNS[PATTERN_LENGTH][COMBO_LENGTH] = {
      ComboInputEmpty},
 };
 
-void render_graphics(CanvasApi* canvas, void* ctx) {
+void render_graphics(Canvas* canvas, void* ctx) {
     GameState* state = (GameState*)acquire_mutex((ValueMutex*)ctx, 25);
     uint32_t t = xTaskGetTickCount();
 
-    canvas->clear(canvas);
+    canvas_clear(canvas);
 
     render_world(state, canvas, t);
     render_player(state, canvas);
@@ -96,42 +96,42 @@ void render_graphics(CanvasApi* canvas, void* ctx) {
     release_mutex((ValueMutex*)ctx, state);
 }
 
-void render_ui(GameState* state, CanvasApi* canvas) {
+void render_ui(GameState* state, Canvas* canvas) {
     if(state->combo_panel_activated) {
-        canvas->set_color(canvas, ColorWhite);
+        canvas_set_color(canvas, ColorWhite);
         //combo box background
-        canvas->draw_box(
+        canvas_draw_box(
             canvas, CP_POSITION_X, CP_POSITION_Y, (SCREEN_WIDTH)-CP_POSITION_X * 2, CP_HEIGHT);
-        canvas->set_color(canvas, ColorBlack);
+        canvas_set_color(canvas, ColorBlack);
         //progress
-        canvas->draw_box(
+        canvas_draw_box(
             canvas,
             CP_POSITION_X,
             CP_POSITION_Y - CP_PROGRESS_HEIGHT,
             (SCREEN_WIDTH - CP_POSITION_X * 2) * state->combo_progress / (100 * SCALE),
             CP_PROGRESS_HEIGHT);
         //combo box frame
-        canvas->draw_frame(
+        canvas_draw_frame(
             canvas, CP_POSITION_X, CP_POSITION_Y, SCREEN_WIDTH - CP_POSITION_X * 2, CP_HEIGHT);
 
         //combo items
-        canvas->set_font(canvas, FontGlyph);
+        canvas_set_font(canvas, FontGlyph);
 
         for(size_t i = 0; i < state->combo_panel_cnt; i++) {
             uint16_t item_x = CP_POSITION_X + CP_ITEM_WIDTH + (CP_ITEM_WIDTH + CP_ITEM_SPACE) * i;
             uint16_t item_y = CP_POSITION_Y + (CP_HEIGHT + CP_ITEM_HEIGHT) / 2;
             switch(combo[i]) {
             case ComboInputUp:
-                canvas->draw_glyph(canvas, item_x, item_y, 9206);
+                canvas_draw_glyph(canvas, item_x, item_y, 9206);
                 break;
             case ComboInputDown:
-                canvas->draw_glyph(canvas, item_x, item_y, 9207);
+                canvas_draw_glyph(canvas, item_x, item_y, 9207);
                 break;
             case ComboInputRight:
-                canvas->draw_glyph(canvas, item_x, item_y, 9205);
+                canvas_draw_glyph(canvas, item_x, item_y, 9205);
                 break;
             case ComboInputLeft:
-                canvas->draw_glyph(canvas, item_x, item_y, 9204);
+                canvas_draw_glyph(canvas, item_x, item_y, 9204);
                 break;
             default:
                 break;

@@ -141,14 +141,14 @@ void update_game_state(GameState* state, uint32_t t, uint32_t dt) {
     }
 }
 
-void render_game_state(GameState* state, CanvasApi* canvas) {
+void render_game_state(GameState* state, Canvas* canvas) {
     /*
     char buf[32];
 
-    canvas->set_font(canvas, FontSecondary);
-    canvas->set_color(canvas, ColorBlack);
+    canvas_set_font(canvas, FontSecondary);
+    canvas_set_color(canvas, ColorBlack);
 
     sprintf(buf, "x: %ld", (state->player_global.x / SCALE) % WORLD_WIDTH);
-    canvas->draw_str(canvas, 0, 40, buf);
+    canvas_draw_str(canvas, 0, 40, buf);
     */
 }

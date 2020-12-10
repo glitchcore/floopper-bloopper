@@ -9,7 +9,7 @@
 #include "floopper-bloopper/player_0/player_0_5.xbm"
 #include "floopper-bloopper/player_0/player_0_6.xbm"
 
-void render_player(GameState* state, CanvasApi* canvas) {
+void render_player(GameState* state, Canvas* canvas) {
     unsigned char* player_sprite = NULL;
 
     if(state->player_v.y > 40) {
@@ -35,7 +35,7 @@ void render_player(GameState* state, CanvasApi* canvas) {
     }
 
     if(player_sprite != NULL) {
-        canvas->draw_xbm(
+        canvas_draw_xbm(
             canvas,
             state->player.x / SCALE,
             state->player.y / SCALE,
