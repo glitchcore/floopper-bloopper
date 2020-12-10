@@ -8,8 +8,7 @@ void render_world(GameState* state, Canvas* canvas, uint32_t t) {
     for(size_t i = 0; i < SCREEN_WIDTH; i++) {
         int32_t floor_height = HEIGHT_MAP[abs(state->screen.x / SCALE + i) % WORLD_WIDTH];
 
-        canvas_draw_box(
-            canvas, i, SCREEN_HEIGHT - (floor_height - state->screen.y) / SCALE, 1, 5);
+        canvas_draw_box(canvas, i, SCREEN_HEIGHT - (floor_height - state->screen.y) / SCALE, 1, 5);
     }
 
     // in-level label
