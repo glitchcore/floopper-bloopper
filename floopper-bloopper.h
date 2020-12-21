@@ -1,3 +1,5 @@
+#pragma once
+
 #include "flipper.h"
 #include "u8g2/u8g2.h"
 
@@ -89,7 +91,7 @@ enum {
 #define COMBO_LENGTH 8
 #define PATTERN_LENGTH 3
 
-const int32_t HEIGHT_MAP[WORLD_WIDTH];
+extern const int32_t HEIGHT_MAP[WORLD_WIDTH];
 
 #define MAX_LINES 4
 
@@ -98,7 +100,7 @@ typedef struct {
     char* lines[MAX_LINES];
 } TextBlock;
 
-const TextBlock NARRATIVE[15];
+extern const TextBlock NARRATIVE[15];
 
 void render_world(GameState* state, Canvas* canvas, uint32_t t);
 
