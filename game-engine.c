@@ -106,11 +106,7 @@ void floopper_bloopper(void* p) {
     widget_input_callback_set(widget, event_cb, event_queue);
 
     // Open GUI and register widget
-    Gui* gui = (Gui*)furi_open("gui");
-    if(gui == NULL) {
-        printf("[cc1101] gui is not available\n");
-        furiac_exit(NULL);
-    }
+    Gui* gui = furi_record_open("gui");
     gui_add_widget(gui, widget, GuiLayerFullscreen);
 
     AppEvent event;
