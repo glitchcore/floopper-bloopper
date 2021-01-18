@@ -1,4 +1,4 @@
-#include "flipper_v2.h"
+#include <furi.h>
 #include "floopper-bloopper/floopper-bloopper.h"
 
 void update_game_state(GameState* state, uint32_t t, uint32_t dt) {

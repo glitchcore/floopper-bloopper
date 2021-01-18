@@ -1,4 +1,4 @@
-#include "flipper_v2.h"
+#include <furi.h>
 #include "floopper-bloopper/floopper-bloopper.h"
 
 void render_world(GameState* state, Canvas* canvas, uint32_t t) {

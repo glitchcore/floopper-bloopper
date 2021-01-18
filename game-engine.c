@@ -1,4 +1,4 @@
-#include "flipper_v2.h"
+#include <furi.h>
 #include "floopper-bloopper/floopper-bloopper.h"
 
 typedef enum {
@@ -14,7 +14,7 @@ typedef struct {
 } AppEvent;
 
 void tick_thread(void* p) {
-    QueueHandle_t event_queue = (QueueHandle_t)p;
+    osMessageQueueId_t event_queue = p;
 
     AppEvent tick_event;
     tick_event.type = EventTypeTick;
@@ -30,24 +30,24 @@ void tick_thread(void* p) {
         // gpio_write(&red, false);
         // gpio_write(&red, true);
 
-        xQueueSend(event_queue, (void*)&tick_event, 0);
+        osMessageQueueGet(event_queue, (void*)&tick_event, 0, osWaitForever);
 
         delay(20);
     }
 }
 
 static void event_cb(InputEvent* input_event, void* ctx) {
-    QueueHandle_t event_queue = (QueueHandle_t)ctx;
+    osMessageQueueId_t event_queue = ctx;
 
     AppEvent event;
     event.type = EventTypeKey;
     event.value.input = *input_event;
-    xQueueSend(event_queue, (void*)&event, 0);
+    osMessageQueuePut(event_queue, (void*)&event, 0, osWaitForever);
 }
 
 void floopper_bloopper(void* p) {
     // create event queue
-    QueueHandle_t event_queue = xQueueCreate(2, sizeof(AppEvent));
+    osMessageQueueId_t event_queue = osMessageQueueNew(2, sizeof(AppEvent), NULL);
 
     osThreadAttr_t ticker_attr;
     memset(&ticker_attr, 0x00, sizeof(osThreadAttr_t));
@@ -119,7 +119,7 @@ void floopper_bloopper(void* p) {
     uint32_t prev_t = 0;
 
     while(1) {
-        if(xQueueReceive(event_queue, (void*)&event, portMAX_DELAY)) {
+        if(osMessageQueueGet(event_queue, (void*)&event, 0, osWaitForever) == osOK) {
             GameState* _state = (GameState*)acquire_mutex_block(&state_mutex);
 
             if(event.type == EventTypeTick) {

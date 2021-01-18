@@ -1,4 +1,4 @@
-#include "flipper_v2.h"
+#include <furi.h>
 #include "floopper-bloopper/floopper-bloopper.h"
 
 #include <stdio.h>

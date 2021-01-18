@@ -1,7 +1,8 @@
 #pragma once
 
-#include "flipper.h"
-#include "u8g2/u8g2.h"
+#include <furi.h>
+#include <gui/gui.h>
+#include <u8g2/u8g2.h>
 
 typedef struct {
     int32_t x;
