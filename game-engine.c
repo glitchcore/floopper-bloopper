@@ -13,30 +13,14 @@ typedef struct {
     EventType type;
 } AppEvent;
 
-void tick_thread(void* p) {
+void game_engine_tick_cb(void* p) {
     osMessageQueueId_t event_queue = p;
-
     AppEvent tick_event;
     tick_event.type = EventTypeTick;
-
-    // create pin
-    // GpioPin red = {.pin = GPIO_PIN_8, .port = GPIOA};
-
-    // configure pin
-    // gpio_init(&red, GpioModeOpenDrain);
-    // gpio_write(&red, true);
-
-    while(1) {
-        // gpio_write(&red, false);
-        // gpio_write(&red, true);
-
-        osMessageQueueGet(event_queue, (void*)&tick_event, 0, osWaitForever);
-
-        delay(20);
-    }
+    osMessageQueuePut(event_queue, (void*)&tick_event, 0, osWaitForever);
 }
 
-static void event_cb(InputEvent* input_event, void* ctx) {
+static void game_engine_event_cb(InputEvent* input_event, void* ctx) {
     osMessageQueueId_t event_queue = ctx;
 
     AppEvent event;
@@ -48,12 +32,8 @@ static void event_cb(InputEvent* input_event, void* ctx) {
 void floopper_bloopper(void* p) {
     // create event queue
     osMessageQueueId_t event_queue = osMessageQueueNew(2, sizeof(AppEvent), NULL);
-
-    osThreadAttr_t ticker_attr;
-    memset(&ticker_attr, 0x00, sizeof(osThreadAttr_t));
-    ticker_attr.name = "tick";
-    ticker_attr.stack_size = 1024;
-    osThreadNew(tick_thread, (void*)event_queue, &ticker_attr);
+    osTimerId_t id1 = osTimerNew(game_engine_tick_cb, osTimerPeriodic, event_queue, NULL);
+    osTimerStart(id1, 20);
 
     GameState state = {
         .player =
@@ -103,7 +83,7 @@ void floopper_bloopper(void* p) {
     ViewPort* view_port = view_port_alloc();
 
     view_port_draw_callback_set(view_port, render_graphics, &state_mutex);
-    view_port_input_callback_set(view_port, event_cb, event_queue);
+    view_port_input_callback_set(view_port, game_engine_event_cb, event_queue);
 
     // Open GUI and register view_port
     Gui* gui = furi_record_open("gui");
