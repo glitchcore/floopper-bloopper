@@ -46,20 +46,20 @@ void render_player(GameState* state, Canvas* canvas) {
 }
 
 void handle_player_input(GameState* state, InputEvent* input) {
-    if(input->state) {
-        if(input->input == InputRight) {
+    if(input->type == InputTypePress) {
+        if(input->key == InputKeyRight) {
             state->player_v.x = SPEED_X;
-        } else if(input->input == InputLeft) {
+        } else if(input->key == InputKeyLeft) {
             state->player_v.x = -SPEED_X;
         }
-    } else {
-        if(input->input == InputRight || input->input == InputLeft) {
+    } else if(input->type == InputTypeRelease) {
+        if(input->key == InputKeyRight || input->key == InputKeyLeft) {
             state->player_v.x = 0;
         }
     }
 
-    if(input->input == InputUp) {
-        if(input->state) {
+    if(input->key == InputKeyUp) {
+        if(input->type == InputTypePress) {
             state->player_v.y = JUMP_SPEED;
         }
     }

@@ -47,35 +47,35 @@ const int32_t HEIGHT_MAP[WORLD_WIDTH] = {
 };
 
 typedef enum {
-    ComboInputUp = 0,
-    ComboInputDown,
-    ComboInputRight,
-    ComboInputLeft,
+    ComboInputKeyUp = 0,
+    ComboInputKeyDown,
+    ComboInputKeyRight,
+    ComboInputKeyLeft,
     ComboInputEmpty,
 } ComboInput;
 ComboInput combo[COMBO_LENGTH];
 
 ComboInput COMBO_PATTERNS[PATTERN_LENGTH][COMBO_LENGTH] = {
-    {ComboInputLeft,
-     ComboInputRight,
-     ComboInputRight,
-     ComboInputDown,
+    {ComboInputKeyLeft,
+     ComboInputKeyRight,
+     ComboInputKeyRight,
+     ComboInputKeyDown,
      ComboInputEmpty,
      ComboInputEmpty,
      ComboInputEmpty,
      ComboInputEmpty}, //text combo <>>!
-    {ComboInputLeft,
-     ComboInputDown,
-     ComboInputRight,
-     ComboInputDown,
-     ComboInputDown,
+    {ComboInputKeyLeft,
+     ComboInputKeyDown,
+     ComboInputKeyRight,
+     ComboInputKeyDown,
+     ComboInputKeyDown,
      ComboInputEmpty,
      ComboInputEmpty,
      ComboInputEmpty}, //text combo off <!>!!
-    {ComboInputLeft,
-     ComboInputUp,
-     ComboInputRight,
-     ComboInputDown,
+    {ComboInputKeyLeft,
+     ComboInputKeyUp,
+     ComboInputKeyRight,
+     ComboInputKeyDown,
      ComboInputEmpty,
      ComboInputEmpty,
      ComboInputEmpty,
@@ -121,16 +121,16 @@ void render_ui(GameState* state, Canvas* canvas) {
             uint16_t item_x = CP_POSITION_X + CP_ITEM_WIDTH + (CP_ITEM_WIDTH + CP_ITEM_SPACE) * i;
             uint16_t item_y = CP_POSITION_Y + (CP_HEIGHT + CP_ITEM_HEIGHT) / 2;
             switch(combo[i]) {
-            case ComboInputUp:
+            case ComboInputKeyUp:
                 canvas_draw_glyph(canvas, item_x, item_y, 9206);
                 break;
-            case ComboInputDown:
+            case ComboInputKeyDown:
                 canvas_draw_glyph(canvas, item_x, item_y, 9207);
                 break;
-            case ComboInputRight:
+            case ComboInputKeyRight:
                 canvas_draw_glyph(canvas, item_x, item_y, 9205);
                 break;
-            case ComboInputLeft:
+            case ComboInputKeyLeft:
                 canvas_draw_glyph(canvas, item_x, item_y, 9204);
                 break;
             default:
@@ -141,8 +141,8 @@ void render_ui(GameState* state, Canvas* canvas) {
 }
 
 void hadle_combo_input(GameState* state, InputEvent* input) {
-    if(input->state) {
-        combo[state->combo_panel_cnt] = input->input;
+    if(input->type == InputTypeShort) {
+        combo[state->combo_panel_cnt] = input->key;
         state->combo_progress = 100 * SCALE;
         state->combo_panel_cnt += 1;
         state->combo_speed =
@@ -164,7 +164,7 @@ void update_combo_process(GameState* state, uint32_t dt) {
 }
 
 void handle_key(GameState* state, InputEvent* input) {
-    // printf("[kb] event: %02x %s\n", input->input, input->state ? "pressed" : "released");
+    // printf("[kb] event: %02x %s\n", input->key, input->state ? "pressed" : "released");
 
     if(state->combo_panel_activated) {
         hadle_combo_input(state, input);
@@ -172,9 +172,9 @@ void handle_key(GameState* state, InputEvent* input) {
         handle_player_input(state, input);
     }
 
-    if(input->input == InputDown) {
+    if(input->key == InputKeyDown) {
         /*
-        if(input->state) {
+        if(input->type == InputTypeShort) {
             //for tests
             if(state->in_boundaries){
                 state->in_boundaries = false;
@@ -185,8 +185,8 @@ void handle_key(GameState* state, InputEvent* input) {
         */
     }
 
-    if(input->input == InputOk) {
-        if(input->state) {
+    if(input->key == InputKeyOk) {
+        if(input->type == InputTypeShort) {
             if(!state->combo_panel_activated) {
                 state->combo_panel_cnt = 0;
                 state->combo_panel_activated = true;
