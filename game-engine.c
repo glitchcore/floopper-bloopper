@@ -77,7 +77,7 @@ void floopper_bloopper(void* p) {
     ValueMutex state_mutex;
     if(!init_mutex(&state_mutex, &state, sizeof(GameState))) {
         printf("[game] cannot create mutex\r\n");
-        furiac_exit(NULL);
+        osThreadExit();
     }
 
     ViewPort* view_port = view_port_alloc();
