@@ -29,7 +29,7 @@ static void game_engine_event_cb(InputEvent* input_event, void* ctx) {
     osMessageQueuePut(event_queue, (void*)&event, 0, osWaitForever);
 }
 
-void floopper_bloopper(void* p) {
+int32_t floopper_bloopper(void* p) {
     // create event queue
     osMessageQueueId_t event_queue = osMessageQueueNew(2, sizeof(AppEvent), NULL);
     osTimerId_t id1 = osTimerNew(game_engine_tick_cb, osTimerPeriodic, event_queue, NULL);
@@ -77,7 +77,7 @@ void floopper_bloopper(void* p) {
     ValueMutex state_mutex;
     if(!init_mutex(&state_mutex, &state, sizeof(GameState))) {
         printf("[game] cannot create mutex\r\n");
-        osThreadExit();
+        return 255;
     }
 
     ViewPort* view_port = view_port_alloc();
@@ -110,4 +110,6 @@ void floopper_bloopper(void* p) {
             view_port_update(view_port);
         }
     }
+
+    return 0;
 }
